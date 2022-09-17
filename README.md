@@ -1,16 +1,7 @@
 # idea2art
 
-A new Flutter project.
+This is idea2.art, a Flutter client for the stability.ai GRPC API for Stable Diffusion.
 
-## Getting Started
+It's usable both with the cloud-based grpc.stability.ai and a personal server running hafriedlander/stable-diffusions-grpcapi
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+TLDR; it's a client to generate AI art
