@@ -31,6 +31,7 @@ dependencies:
   freezed_annotation: ^2.1.0
   grpc: ^3.0.2
   shared_preferences: ^2.0.15
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -49,9 +50,13 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/logos/
+
+  fonts:
+    - family: Molot
+      fonts:
+        - asset: assets/Molot.otf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
