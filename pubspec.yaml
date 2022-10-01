@@ -32,6 +32,8 @@ dependencies:
   grpc: ^3.0.2
   shared_preferences: ^2.0.15
   google_fonts: ^3.0.1
+  image: ^3.2.0
+  collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:
@@ -52,11 +54,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logos/
-
-  fonts:
-    - family: Molot
-      fonts:
-        - asset: assets/Molot.otf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

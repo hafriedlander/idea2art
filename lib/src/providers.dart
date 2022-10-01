@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:idea2art/src/models/canvas.dart';
+import 'package:idea2art/src/notifiers/canvas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:idea2art/src/models/server.dart';
@@ -80,4 +82,32 @@ final generateSettingsEngineProvider = Provider<Engine?>((ref) {
   }
 
   return null;
+});
+
+final imageCanvasProvider =
+    StateNotifierProvider<ImageCanvasNotifier, ImageCanvas>(
+  (ref) => ImageCanvasNotifier(),
+);
+
+final imageCanvasControlsProvider =
+    StateNotifierProvider<ImageCanvasControlsNotifier, ImageCanvasControls>(
+  (ref) => ImageCanvasControlsNotifier(),
+);
+
+final imageCanvasFrameProvider =
+    StateNotifierProvider<ImageCanvasFrameNotifier, ImageCanvasFrame>(
+  (ref) => ImageCanvasFrameNotifier(),
+);
+
+final imageCanvasFrameWithSizeProvider = Provider<ImageCanvasFrame>((ref) {
+  final settings = ref.watch(generateSettingsProvider);
+  final frame = ref.watch(imageCanvasFrameProvider);
+
+  return frame.copyWith(
+    pos: Rect.fromCenter(
+      center: frame.pos.center,
+      width: settings.width.toDouble(),
+      height: settings.height.toDouble(),
+    ),
+  );
 });

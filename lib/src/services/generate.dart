@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+import 'package:image/image.dart' as di;
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +23,13 @@ class GenerateServiceHostPortBadException implements Exception {
 class GenerateServiceAuthorizationException implements Exception {
   String? message;
   GenerateServiceAuthorizationException([this.message]);
+}
+
+class ImagePair {
+  ImagePair(this.uiImage, this.diImage);
+
+  final ui.Image uiImage;
+  final di.Image diImage;
 }
 
 class GenerateService {
@@ -72,28 +81,60 @@ class GenerateService {
     );
   }
 
-  Stream<ImageProvider> generate(
+  Stream<Uint8List> generate(
     GeneratePrompt prompt,
     GenerateSettings settings,
   ) async* {
     final stub = GenerationServiceClient(channel);
 
+    final promptList = <Prompt>[];
+
+    promptList.add(Prompt(text: prompt.prompt));
+
+    final imagePng = prompt.imagePng;
+    if (imagePng != null) {
+      promptList.add(
+        Prompt(
+          artifact: Artifact(
+            binary: imagePng,
+            type: ArtifactType.ARTIFACT_IMAGE,
+          ),
+        ),
+      );
+    }
+
+    final maskPng = prompt.maskPng;
+    if (maskPng != null) {
+      promptList.add(
+        Prompt(
+          artifact: Artifact(
+            binary: maskPng,
+            type: ArtifactType.ARTIFACT_MASK,
+          ),
+        ),
+      );
+    }
+
     final request = Request(
-      prompt: [Prompt(text: prompt.prompt)],
+      prompt: promptList,
       engineId: settings.engineID,
       image: ImageParameters(
         height: Int64(settings.height),
         width: Int64(settings.width),
         samples: Int64(settings.numberOfImages),
         steps: Int64(settings.steps),
-        seed: [settings.seed],
+        seed: settings.seed >= 0 ? [settings.seed] : [],
         transform: TransformType(
           // TODO: Don't hardcode
           diffusion: DiffusionSampler.SAMPLER_DDIM,
         ),
         parameters: [
           StepParameter(
-            sampler: SamplerParameters(cfgScale: settings.cfgScale),
+            sampler: SamplerParameters(
+              cfgScale: settings.cfgScale,
+              eta: 0.8, // TODO: Don't hardcode ETA
+            ),
+            schedule: ScheduleParameters(start: settings.strength),
           ),
         ],
       ),
@@ -105,9 +146,27 @@ class GenerateService {
     )) {
       for (final artifact in answer.artifacts) {
         if (artifact.type == ArtifactType.ARTIFACT_IMAGE) {
-          yield MemoryImage(Uint8List.fromList(artifact.binary));
+          yield Uint8List.fromList(artifact.binary);
         }
       }
+    }
+  }
+
+  Stream<ImageProvider> generateToImageProvider(
+    GeneratePrompt prompt,
+    GenerateSettings settings,
+  ) async* {
+    await for (Uint8List image in generate(prompt, settings)) {
+      yield MemoryImage(image);
+    }
+  }
+
+  Stream<ui.Image> generateToUIImage(
+    GeneratePrompt prompt,
+    GenerateSettings settings,
+  ) async* {
+    await for (Uint8List image in generate(prompt, settings)) {
+      yield await decodeImageFromList(image);
     }
   }
 }
