@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:idea2art/src/models/canvas.dart';
+import 'package:idea2art/src/models/generate.dart';
+import 'package:idea2art/src/services/generate.dart';
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as di;
 
 class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
   ImageCanvasNotifier() : super(ImageCanvas());
+
+  // -- For ImageSet --
 
   void add(ImageCanvasImageSet imageset) {
     state = state.copyWith(imagesets: [...state.imagesets, imageset]);
@@ -23,6 +27,77 @@ class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
     state = state.copyWith(selectedKey: -1);
   }
 
+  void delete(int setKey) {
+    state = state.copyWith(
+      imagesets: state.imagesets.where((set) => set.key != setKey).toList(),
+    );
+  }
+
+  void clear() {
+    state = state.copyWith(imagesets: []);
+  }
+
+  ImageCanvas _adjustImageset(
+    int setKey,
+    ImageCanvasImageSet Function(ImageCanvasImageSet set) callback,
+  ) {
+    return state.copyWith(
+      imagesets: state.imagesets.map<ImageCanvasImageSet>((set) {
+        return (set.key == setKey) ? callback(set) : set;
+      }).toList(),
+    );
+  }
+
+  void setResult(int setKey, GenerateResult result) {
+    state = _adjustImageset(
+      setKey,
+      (set) => set.copyWith(result: result),
+    );
+  }
+
+  void setSettings(int setKey, GenerateSettings settings) {
+    state = _adjustImageset(
+      setKey,
+      (set) => set.copyWith(settings: settings),
+    );
+  }
+
+  void setTotal(int setKey, int total) {
+    state = _adjustImageset(
+      setKey,
+      (set) => set.copyWith(total: total),
+    );
+  }
+
+  void increaseTotal(int setKey, int extra) {
+    state = _adjustImageset(
+      setKey,
+      (set) => set.copyWith(total: set.total + extra),
+    );
+  }
+
+  void setInProgress(int setKey, bool inProgress) {
+    // Special case - if the imageset is no longer in progress, and is empty, remove it
+    if (inProgress == false && state[setKey]?.images.length == 0) {
+      state = state.copyWith(
+        imagesets: state.imagesets
+            .where((imageset) => imageset.key != setKey)
+            .toList(),
+        selectedKey: state.selectedKey == setKey ? -1 : state.selectedKey,
+      );
+    } else {
+      state = _adjustImageset(
+        setKey,
+        (set) => set.copyWith(inProgress: inProgress),
+      );
+    }
+  }
+
+  void cancel(int setKey) {
+    state[setKey]?.result?.cancel();
+    setTotal(setKey, state[setKey]?.images.length ?? 0);
+  }
+
   void selectImageFromSet(int setKey, int imageKey) {
     state = state.copyWith(
       imagesets: state.imagesets.map<ImageCanvasImageSet>((set) {
@@ -34,19 +109,17 @@ class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
     );
   }
 
-  void addImageToSet(ImageCanvasImageSet imageset, ImageCanvasImage image) {
-    state = state.copyWith(
-      imagesets: state.imagesets.map<ImageCanvasImageSet>((set) {
-        if (set.key == imageset.key) {
-          return set.copyWith(images: [...set.images, image]);
-        }
-        return set;
-      }).toList(),
+  void addImageToSet(int setKey, ImageCanvasImage image) {
+    state = _adjustImageset(
+      setKey,
+      (set) => set.copyWith(
+        images: [...set.images, image],
+      ),
     );
   }
 
-  void addUIImageToSet(ImageCanvasImageSet imageset, ui.Image image) {
-    addImageToSet(imageset, ImageCanvasImage(image: image));
+  void addUIImageToSet(int setKey, ui.Image image) {
+    addImageToSet(setKey, ImageCanvasImage(image: image));
   }
 
   void setImageSetCenter(int imagesetkey, Offset center) {
@@ -64,10 +137,6 @@ class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
         return set;
       }).toList(),
     );
-  }
-
-  void clear() {
-    state = state.copyWith(imagesets: []);
   }
 }
 

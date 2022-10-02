@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:idea2art/src/models/generate.dart';
+import 'package:idea2art/src/services/generate.dart';
 import 'package:image/image.dart' as di;
 
 class ImageCanvasMaskStroke {}
@@ -50,7 +51,8 @@ class ImageCanvasImageSet {
   final GenerateSettings settings;
 
   // Can use to monitor progress
-  final Stream? stream;
+  final bool inProgress;
+  final GenerateResult? result;
 
   ImageCanvasImageSet({
     key = -1,
@@ -58,7 +60,8 @@ class ImageCanvasImageSet {
     required this.total,
     required this.prompt,
     required this.settings,
-    this.stream,
+    this.inProgress = false,
+    this.result,
     this.images = const [],
     this.selectedKey = -1,
   }) {
@@ -73,7 +76,8 @@ class ImageCanvasImageSet {
     required total,
     required prompt,
     required settings,
-    stream,
+    inProgress = false,
+    result,
     images = const <ImageCanvasImage>[],
   }) : this(
           key: key,
@@ -81,24 +85,32 @@ class ImageCanvasImageSet {
           total: total,
           prompt: prompt,
           settings: settings,
-          stream: stream,
+          inProgress: inProgress,
+          result: result,
           images: images,
         );
 
   copyWith({
     Rect? pos,
+    int? total,
+    GeneratePrompt? prompt,
+    GenerateSettings? settings,
+    bool? inProgress,
+    GenerateResult? result,
     List<ImageCanvasImage>? images,
     int? selectedKey,
   }) {
     return ImageCanvasImageSet(
-        key: key,
-        total: total,
-        prompt: prompt,
-        settings: settings,
-        pos: pos ?? this.pos,
-        stream: stream,
-        images: images ?? this.images,
-        selectedKey: selectedKey ?? this.selectedKey);
+      key: key,
+      total: total ?? this.total,
+      prompt: prompt ?? this.prompt,
+      settings: settings ?? this.settings,
+      pos: pos ?? this.pos,
+      inProgress: inProgress ?? this.inProgress,
+      result: result ?? this.result,
+      images: images ?? this.images,
+      selectedKey: selectedKey ?? this.selectedKey,
+    );
   }
 
   ImageCanvasImage? selectedImage() {
@@ -130,12 +142,12 @@ class ImageCanvas {
   }
 
   ImageCanvasImageSet? selectedImageset() {
-    if (selectedKey >= 0) {
-      return imagesets.firstWhereOrNull(
-        (imageset) => imageset.key == selectedKey,
-      );
-    }
+    if (selectedKey >= 0) return this[selectedKey];
     return null;
+  }
+
+  ImageCanvasImageSet? operator [](int setKey) {
+    return imagesets.firstWhereOrNull((imageset) => imageset.key == setKey);
   }
 }
 

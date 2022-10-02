@@ -11,6 +11,7 @@ import 'package:image/image.dart' as di;
 import 'package:idea2art/src/models/canvas.dart';
 import 'package:idea2art/src/providers.dart';
 import 'package:idea2art/src/widgets/image_canvas.dart';
+import 'package:idea2art/src/utils.dart';
 
 class GenerateImages extends ConsumerWidget {
   const GenerateImages({super.key});
@@ -72,6 +73,9 @@ class GeneratePromptField extends HookConsumerWidget {
 
     return TextField(
       controller: _controller,
+      keyboardType: TextInputType.multiline,
+      minLines: 3,
+      maxLines: 5,
       onChanged: (String value) {
         ref.read(generatePromptProvider.notifier).setPrompt(value);
       },
@@ -90,12 +94,9 @@ class GeneratePrimaryPanel extends ConsumerWidget {
     return Column(children: [
       Expanded(
         child: Center(child: ImageCanvasWidget()),
-        //         child: hasResult
-        //           ? const GenerateImages()
-        //         : const GenerateImagesPlaceholder()),
       ),
       SizedBox(
-        width: 400,
+        width: 512,
         child: Row(children: const [
           Expanded(child: GeneratePromptField()),
           GenerateButton(),
@@ -144,132 +145,11 @@ class GenerateButton extends ConsumerWidget {
 
     debugPrint("${prompt.prompt} ${service.hasValue.toString()}");
 
-    return TextButton(
+    return ElevatedButton(
       onPressed: enabled
-          ? (() async {
-              debugPrint('Generating $prompt');
-
-              final imageCanvas = ref.read(imageCanvasProvider);
-              final imageFrame = ref.read(imageCanvasFrameWithSizeProvider);
-
-              var overlaps = <ImageCanvasImageSet>[];
-
-              for (final imageset in imageCanvas.imagesets) {
-                if (imageset.pos.overlaps(imageFrame.pos)) {
-                  overlaps.add(imageset);
-                }
-              }
-
-              di.Image? image = null;
-              di.Image? mask = null;
-
-              if (overlaps.isNotEmpty) {
-                image = di.Image(imageFrame.pos.width.toInt(),
-                    imageFrame.pos.height.toInt());
-                mask = di.Image(imageFrame.pos.width.toInt(),
-                    imageFrame.pos.height.toInt());
-
-                final Iterable<DIImage?> overlapImages = await Future.wait(
-                  overlaps.map<Future<DIImage?>>(
-                    (imageset) async {
-                      ImageCanvasImage? selected = imageset.selectedImage();
-                      if (selected == null) return null;
-
-                      final bytes = await selected.image.toByteData(
-                        format: ui.ImageByteFormat.rawStraightRgba,
-                      );
-
-                      if (bytes != null) {
-                        return DIImage.fromBytes(
-                          bytes: bytes,
-                          pos: imageset.pos,
-                        );
-                      } else {
-                        return null;
-                      }
-                    },
-                  ),
-                );
-
-                for (final overlap in overlapImages) {
-                  if (overlap == null) continue;
-
-                  di.copyInto(
-                    image,
-                    overlap.image,
-                    dstX: (overlap.pos.left - imageFrame.pos.left).toInt(),
-                    dstY: (overlap.pos.top - imageFrame.pos.top).toInt(),
-                  );
-
-                  mask = image.clone();
-
-                  // Copy alpha to color, set alpha to full, and invert
-                  final maskb = mask.getBytes();
-                  for (var i = 0, len = maskb.length; i < len; i += 4) {
-                    maskb[i] = maskb[i + 1] = maskb[i + 2] = 255 - maskb[i + 3];
-                    maskb[i + 3] = 255;
-                  }
-
-                  // Blur mask
-                  mask = di.gaussianBlur(mask, 64);
-
-                  // And then adjust so out-of-image area is always white
-                  for (var i = 0, len = maskb.length; i < len; i += 4) {
-                    maskb[i] =
-                        maskb[i + 1] = maskb[i + 2] = min(255, maskb[i] * 2);
-                    maskb[i + 3] = 255;
-                  }
-                }
-              }
-
-              final adjustedPrompt = prompt.copyWith(
-                imagePng: image != null ? di.encodePng(image) : null,
-                maskPng: mask != null ? di.encodePng(mask) : null,
-              );
-
-              final adjustedSettings = settings.copyWith(
-                engineID: engine.id,
-                seed: settings.seed <= 0
-                    ? Random().nextInt(4294967295)
-                    : settings.seed,
-              );
-
-              final s = service.value;
-              if (s != null) {
-                final stream = s.generateToUIImage(
-                  adjustedPrompt,
-                  adjustedSettings,
-                );
-
-                final set = ImageCanvasImageSet.fromCenterWH(
-                  center: imageFrame.pos.center,
-                  width: settings.width,
-                  height: settings.height,
-                  total: settings.numberOfImages,
-                  prompt: adjustedPrompt,
-                  settings: adjustedSettings,
-                  stream: stream,
-                );
-
-                ref.read(imageCanvasProvider.notifier).add(set);
-                ref.read(imageCanvasProvider.notifier).selectByImageset(set);
-
-                /*
-                if (mask != null) {
-                  ref.read(imageCanvasProvider.notifier).addUIImageToSet(
-                      set,
-                      await decodeImageFromList(
-                          Uint8List.fromList(di.encodePng(mask))));
-                }
-                */
-
-                await for (final image in stream) {
-                  ref
-                      .read(imageCanvasProvider.notifier)
-                      .addUIImageToSet(set, image);
-                }
-              }
-            })
+          ? () {
+              GenerationExecuter.generateForNewImageset(ref);
+            }
           : null,
       child: const Text("Generate"),
     );

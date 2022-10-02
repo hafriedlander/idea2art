@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:idea2art/src/utils.dart';
 import 'package:vector_math/vector_math_64.dart' as vm;
 
 import 'package:flutter/gestures.dart';
@@ -131,14 +132,165 @@ class ImageCanvasImageSetWidget extends HookConsumerWidget {
     ImageCanvasImage? selected = imageset.selectedImage();
     if (selected == null) {
       return Container(
-          width: imageset.pos.width,
-          height: imageset.pos.height,
-          color: Colors.grey);
+        width: imageset.pos.width,
+        height: imageset.pos.height,
+        color: Colors.grey.shade700,
+      );
     } else {
       return ImageCanvasImageWidget(
         image: selected,
       );
     }
+  }
+}
+
+class ImageCanvasExpandButton extends HookConsumerWidget {
+  final ImageCanvasImageSet imageset;
+
+  const ImageCanvasExpandButton({
+    required this.imageset,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return TextButton(
+      onPressed: () {
+        GenerationExecuter.generateForExistingImageset(ref, imageset);
+      },
+      child: const Icon(Icons.history),
+    );
+  }
+}
+
+class ImageCanvasDeleteButton extends HookConsumerWidget {
+  final ImageCanvasImageSet imageset;
+
+  const ImageCanvasDeleteButton({
+    required this.imageset,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SlowButton(
+      onSlowPress: () {
+        ref.read(imageCanvasProvider.notifier).delete(imageset.key);
+      },
+      child: const Icon(Icons.delete_forever),
+    );
+  }
+}
+
+class SlowButtonPainter extends CustomPainter {
+  final double r;
+
+  SlowButtonPainter({required this.r});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final circlePaint = Paint();
+    circlePaint.strokeWidth = 4;
+    circlePaint.color = Colors.lightGreen;
+    circlePaint.style = PaintingStyle.stroke;
+
+    canvas.drawCircle(Offset(r / 2, r / 2), r * 2, circlePaint);
+  }
+
+  @override
+  bool shouldRepaint(SlowButtonPainter oldDelegate) {
+    return r != oldDelegate.r;
+  }
+}
+
+class SlowButton extends HookWidget {
+  final Widget child;
+  final Duration duration;
+  final void Function() onSlowPress;
+
+  SlowButton({
+    required this.child,
+    this.duration = const Duration(seconds: 1),
+    required this.onSlowPress,
+    super.key,
+  });
+
+  final GlobalKey _widgetKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    final _anim = useAnimationController(duration: duration);
+    useAnimation(_anim);
+
+    return GestureDetector(
+      key: _widgetKey,
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) {
+        OverlayState? overlayState = Overlay.of(context);
+        OverlayEntry overlayEntry;
+        overlayEntry = OverlayEntry(builder: (context) {
+          final renderBox =
+              _widgetKey.currentContext?.findRenderObject() as RenderBox?;
+
+          if (renderBox == null) return Container();
+
+          Offset offset = renderBox.localToGlobal(Offset.zero);
+
+          final r = 8 + 18 * (1 - _anim.value);
+          final dx = offset.dx + renderBox.size.width / 2 - r / 2;
+          final dy = offset.dy + renderBox.size.width / 2 - r / 2;
+
+          return Stack(children: [
+            Positioned(
+              top: dy,
+              left: dx,
+              child: Container(
+                width: r * 2,
+                height: r * 2,
+                child: CustomPaint(
+                  painter: SlowButtonPainter(
+                    r: r,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(top: offset.dy, left: offset.dx, child: child)
+          ]);
+        });
+
+        _anim.addListener(() {
+          overlayState!.setState(() {});
+        });
+
+        // inserting overlay entry
+        overlayState!.insert(overlayEntry);
+
+        _anim.forward(from: 0)
+          ..whenComplete(() => onSlowPress())
+          ..whenCompleteOrCancel(() => overlayEntry.remove());
+      },
+      onTapUp: (_) {
+        debugPrint("U");
+        _anim.reset();
+      },
+      child: child,
+    );
+  }
+}
+
+class ImageCanvasCancelButton extends HookConsumerWidget {
+  final ImageCanvasImageSet imageset;
+  const ImageCanvasCancelButton({required this.imageset, super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SlowButton(
+      duration: Duration(seconds: 2),
+      onSlowPress: () {
+        ref.read(imageCanvasProvider.notifier).cancel(imageset.key);
+      },
+      child: const Icon(Icons.cancel),
+    );
   }
 }
 
@@ -172,7 +324,6 @@ class ImageCanvasImageSetThumbsWidget extends HookConsumerWidget {
       thumbs.add(
         InkWell(
           onTap: () {
-            debugPrint("Bong ${image.key}");
             ref
                 .read(imageCanvasProvider.notifier)
                 .selectImageFromSet(imageset.key, image.key);
@@ -186,7 +337,16 @@ class ImageCanvasImageSetThumbsWidget extends HookConsumerWidget {
     for (var i = 0; i < imageset.total - imageset.images.length; i++) {
       thumbs.add(Align(
         alignment: Alignment.topCenter,
-        child: Container(width: w, height: h, color: Colors.grey),
+        child: Container(
+          width: w,
+          height: h,
+          color: Colors.grey.shade700,
+          child: i == 0
+              ? const Center(
+                  child: CircularProgressIndicator(value: null),
+                )
+              : Container(),
+        ),
       ));
       thumbs.add(spacer);
     }
@@ -201,13 +361,35 @@ class ImageCanvasImageSetThumbsWidget extends HookConsumerWidget {
       width: 512,
       height: 64,
       color: Colors.grey.shade700.withAlpha(128),
-      child: ScrollConfiguration(
-        behavior: ImageCanvasImageSetThumbsScrollBehavior(),
-        child: ListView(
-          // This next line does the trick.
-          scrollDirection: Axis.horizontal,
-          children: _thumbs(ref),
-        ),
+      child: Row(
+        children: [
+          Expanded(
+            child: ScrollConfiguration(
+              behavior: ImageCanvasImageSetThumbsScrollBehavior(),
+              child: ListView(
+                // This next line does the trick.
+                scrollDirection: Axis.horizontal,
+                children: _thumbs(ref),
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ...(imageset.inProgress
+                    ? [
+                        ImageCanvasCancelButton(imageset: imageset),
+                      ]
+                    : [
+                        ImageCanvasExpandButton(imageset: imageset),
+                        ImageCanvasDeleteButton(imageset: imageset),
+                      ])
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -310,7 +492,7 @@ class ImageCanvasWidget extends HookConsumerWidget {
   Offset _snapTest(Rect snapee, List<Hittable> hittables) {
     const snapDistance = 32.0;
 
-    var snapDelta = Offset(0, 0);
+    var snapDelta = const Offset(0, 0);
 
     for (var hittable in hittables.reversed) {
       if (snapee.overlaps(hittable.rect.inflate(snapDistance))) {
@@ -507,7 +689,19 @@ class ImageCanvasWidget extends HookConsumerWidget {
                     imageset: selectedImageset,
                   ),
                 )
-              : Container()
+              : Container(),
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: TextButton(
+              onPressed: images.imagesets.isNotEmpty
+                  ? () {
+                      GenerationExecuter.downloadImages(ref);
+                    }
+                  : null,
+              child: Icon(Icons.download),
+            ),
+          ),
         ],
       ),
     );

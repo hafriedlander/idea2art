@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:image/image.dart' as di;
 import 'package:fixnum/fixnum.dart';
@@ -25,11 +26,63 @@ class GenerateServiceAuthorizationException implements Exception {
   GenerateServiceAuthorizationException([this.message]);
 }
 
-class ImagePair {
-  ImagePair(this.uiImage, this.diImage);
+class GenerateResult {
+  final StreamController<ImageProvider> _images;
+  final StreamController<ui.Image> _uiImages;
+  final StreamController<double> _progress;
 
-  final ui.Image uiImage;
-  final di.Image diImage;
+  final ResponseStream<Answer> _sourceStream;
+
+  final Completer<bool> _inprogress;
+
+  GenerateResult(this._sourceStream)
+      : _images = StreamController<ImageProvider>(),
+        _uiImages = StreamController<ui.Image>(),
+        _progress = StreamController<double>(),
+        _inprogress = Completer<bool>() {
+    _startListening();
+  }
+
+  void _startListening() async {
+    try {
+      await for (Answer answer in _sourceStream) {
+        for (final artifact in answer.artifacts) {
+          if (artifact.type == ArtifactType.ARTIFACT_IMAGE) {
+            final image = Uint8List.fromList(artifact.binary);
+            _images.add(MemoryImage(image));
+            _uiImages.add(await decodeImageFromList(image));
+          }
+        }
+      }
+    } on GrpcError {
+      // pass
+    } finally {
+      _inprogress.complete(true);
+      _images.close();
+      _uiImages.close();
+      _progress.close();
+    }
+  }
+
+  void cancel() {
+    _sourceStream.cancel();
+  }
+
+  Future<bool> get inprogress {
+    return _inprogress.future;
+  }
+
+  Stream<ImageProvider> get images {
+    return _images.stream;
+  }
+
+  Stream<ui.Image> get uiimages {
+    return _uiImages.stream;
+  }
+
+  Stream<double> get progress {
+    return _progress.stream;
+  }
 }
 
 class GenerateService {
@@ -55,6 +108,7 @@ class GenerateService {
       if (err.code == 14) {
         throw GenerateServiceAuthorizationException(err.message);
       } else {
+        debugPrint("$err ${err.message}");
         throw GenerateServiceHostPortBadException(err.message);
       }
     }
@@ -81,10 +135,10 @@ class GenerateService {
     );
   }
 
-  Stream<Uint8List> generate(
+  GenerateResult generate(
     GeneratePrompt prompt,
     GenerateSettings settings,
-  ) async* {
+  ) {
     final stub = GenerationServiceClient(channel);
 
     final promptList = <Prompt>[];
@@ -140,33 +194,9 @@ class GenerateService {
       ),
     );
 
-    await for (Answer answer in stub.generate(
+    return GenerateResult(stub.generate(
       request,
       options: CallOptions(metadata: {"authorization": "Bearer ${server.key}"}),
-    )) {
-      for (final artifact in answer.artifacts) {
-        if (artifact.type == ArtifactType.ARTIFACT_IMAGE) {
-          yield Uint8List.fromList(artifact.binary);
-        }
-      }
-    }
-  }
-
-  Stream<ImageProvider> generateToImageProvider(
-    GeneratePrompt prompt,
-    GenerateSettings settings,
-  ) async* {
-    await for (Uint8List image in generate(prompt, settings)) {
-      yield MemoryImage(image);
-    }
-  }
-
-  Stream<ui.Image> generateToUIImage(
-    GeneratePrompt prompt,
-    GenerateSettings settings,
-  ) async* {
-    await for (Uint8List image in generate(prompt, settings)) {
-      yield await decodeImageFromList(image);
-    }
+    ));
   }
 }
