@@ -1,67 +1,18 @@
 import 'dart:math';
-import 'package:collection/collection.dart';
-import 'package:idea2art/src/utils.dart';
+import 'dart:ui' as ui;
 import 'package:vector_math/vector_math_64.dart' as vm;
+
+import 'package:collection/collection.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:idea2art/src/models/canvas.dart';
-import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/providers.dart';
-
-import 'dart:ui' as ui;
-import 'package:image/image.dart' as di;
-
-class ImageCanvasPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {}
-
-  @override
-  bool shouldRepaint(ImageCanvasPainter delegate) {
-    return true;
-  }
-}
-
-class MaskImage {
-  MaskImage({required int ir, required int or}) {
-    final image = di.Image.rgb(or * 2, or * 2);
-
-    double alphad = 1.0 / (or - ir);
-
-    for (var x = 0; x < or; x++) {
-      for (var y = 0; y < or; y++) {
-        var d = sqrt(x * x + y * y);
-        var a = (d - ir).toDouble() / (or - ir).toDouble();
-
-        for (var dx in [-x, x]) {
-          for (var dy in [-y, y]) {
-            image.setPixelRgba(or + dx, or + dy, 0, 0, 0, (a * 255).toInt());
-          }
-        }
-      }
-    }
-
-    ui.decodeImageFromPixels(
-        image.getBytes(), image.width, image.height, ui.PixelFormat.rgba8888,
-        (image) {
-      this.image = image;
-    });
-  }
-
-  late final ui.Image image;
-}
-
-class ComposedImage {
-  Image image;
-  int x;
-  int y;
-
-  ComposedImage({required this.image, this.x = 0, this.y = 0});
-}
+import 'package:idea2art/src/widgets/slow_button.dart';
+import 'package:idea2art/src/utils.dart';
 
 class ImageCanvasImagePainter extends CustomPainter {
   ImageCanvasImagePainter({
@@ -99,7 +50,11 @@ class ImageCanvasImagePainter extends CustomPainter {
 }
 
 class ImageCanvasImageWidget extends HookConsumerWidget {
-  ImageCanvasImageWidget({required this.image, this.width = -1});
+  const ImageCanvasImageWidget({
+    super.key,
+    required this.image,
+    this.width = -1,
+  });
 
   final ImageCanvasImage image;
   final int width;
@@ -111,7 +66,7 @@ class ImageCanvasImageWidget extends HookConsumerWidget {
         ? image.image.height
         : image.image.height / image.image.width * width;
 
-    return Container(
+    return SizedBox(
       width: w.toDouble(),
       height: w.toDouble(),
       child: CustomPaint(
@@ -146,7 +101,6 @@ class ImageCanvasImageSetWidget extends HookConsumerWidget {
 
 class ImageCanvasExpandButton extends HookConsumerWidget {
   final ImageCanvasImageSet imageset;
-
   const ImageCanvasExpandButton({
     required this.imageset,
     super.key,
@@ -182,110 +136,16 @@ class ImageCanvasDeleteButton extends HookConsumerWidget {
   }
 }
 
-class SlowButtonPainter extends CustomPainter {
-  final double r;
-
-  SlowButtonPainter({required this.r});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final circlePaint = Paint();
-    circlePaint.strokeWidth = 4;
-    circlePaint.color = Colors.lightGreen;
-    circlePaint.style = PaintingStyle.stroke;
-
-    canvas.drawCircle(Offset(r / 2, r / 2), r * 2, circlePaint);
-  }
-
-  @override
-  bool shouldRepaint(SlowButtonPainter oldDelegate) {
-    return r != oldDelegate.r;
-  }
-}
-
-class SlowButton extends HookWidget {
-  final Widget child;
-  final Duration duration;
-  final void Function() onSlowPress;
-
-  SlowButton({
-    required this.child,
-    this.duration = const Duration(seconds: 1),
-    required this.onSlowPress,
-    super.key,
-  });
-
-  final GlobalKey _widgetKey = GlobalKey();
-
-  @override
-  Widget build(BuildContext context) {
-    final _anim = useAnimationController(duration: duration);
-    useAnimation(_anim);
-
-    return GestureDetector(
-      key: _widgetKey,
-      behavior: HitTestBehavior.opaque,
-      onTapDown: (_) {
-        OverlayState? overlayState = Overlay.of(context);
-        OverlayEntry overlayEntry;
-        overlayEntry = OverlayEntry(builder: (context) {
-          final renderBox =
-              _widgetKey.currentContext?.findRenderObject() as RenderBox?;
-
-          if (renderBox == null) return Container();
-
-          Offset offset = renderBox.localToGlobal(Offset.zero);
-
-          final r = 8 + 18 * (1 - _anim.value);
-          final dx = offset.dx + renderBox.size.width / 2 - r / 2;
-          final dy = offset.dy + renderBox.size.width / 2 - r / 2;
-
-          return Stack(children: [
-            Positioned(
-              top: dy,
-              left: dx,
-              child: Container(
-                width: r * 2,
-                height: r * 2,
-                child: CustomPaint(
-                  painter: SlowButtonPainter(
-                    r: r,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(top: offset.dy, left: offset.dx, child: child)
-          ]);
-        });
-
-        _anim.addListener(() {
-          overlayState!.setState(() {});
-        });
-
-        // inserting overlay entry
-        overlayState!.insert(overlayEntry);
-
-        _anim.forward(from: 0)
-          ..whenComplete(() => onSlowPress())
-          ..whenCompleteOrCancel(() => overlayEntry.remove());
-      },
-      onTapUp: (_) {
-        debugPrint("U");
-        _anim.reset();
-      },
-      child: child,
-    );
-  }
-}
-
 class ImageCanvasCancelButton extends HookConsumerWidget {
   final ImageCanvasImageSet imageset;
-  const ImageCanvasCancelButton({required this.imageset, super.key});
+  const ImageCanvasCancelButton({
+    required this.imageset,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SlowButton(
-      duration: Duration(seconds: 2),
       onSlowPress: () {
         ref.read(imageCanvasProvider.notifier).cancel(imageset.key);
       },

@@ -17,7 +17,7 @@ class SplashLogo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: ([
-        Image(image: AssetImage('logos/$logo')),
+        Image(image: AssetImage('assets/logos/$logo')),
         LogoText(style: Theme.of(context).textTheme.headline1!),
         const CircularProgressIndicator(value: null),
       ])

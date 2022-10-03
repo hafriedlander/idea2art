@@ -15,17 +15,21 @@ class GenerateServerPendingNotifier
 }
 
 class GenerateServerNotifier extends GenerateServerPendingNotifier {
-  GenerateServerNotifier(this.pref) : super(const AsyncValue.loading()) {
+  GenerateServerNotifier(this.pref, this.localServer)
+      : super(const AsyncValue.loading()) {
     final serverJson = pref.getString("serverCurrent");
 
-    if (serverJson == null) {
-      state = const AsyncValue.data(GenerateServer());
-    } else {
+    if (serverJson != null) {
       state = AsyncValue.data(GenerateServer.fromJson(jsonDecode(serverJson)));
+    } else if (localServer.isNotEmpty) {
+      state = AsyncValue.data(GenerateServer.fromJson(jsonDecode(localServer)));
+    } else {
+      state = const AsyncValue.data(GenerateServer());
     }
   }
 
   final SharedPreferences pref;
+  final String localServer;
 
   void updatePrefs() {
     pref.setString("serverCurrent", jsonEncode(state.value));

@@ -1,20 +1,23 @@
 import 'dart:async';
 
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:idea2art/src/models/canvas.dart';
-import 'package:idea2art/src/notifiers/canvas.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:idea2art/src/models/canvas.dart';
 import 'package:idea2art/src/models/server.dart';
 import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/models/engine.dart';
 import 'package:idea2art/src/models/results.dart';
 
+import 'package:idea2art/src/notifiers/canvas.dart';
 import 'package:idea2art/src/notifiers/server.dart';
 import 'package:idea2art/src/notifiers/generate.dart';
 import 'package:idea2art/src/notifiers/result.dart';
+
 import 'package:idea2art/src/services/generate.dart';
 
 final sharedPreferencesInstance =
@@ -23,14 +26,32 @@ final sharedPreferencesInstance =
   return await SharedPreferences.getInstance();
 });
 
+final localServerProvider = FutureProvider<String>((ref) async {
+  if (Uri.base.scheme == "http" || Uri.base.scheme == "https") {
+    final response = await http.get(Uri.parse("/server.json"));
+    final contentType = response.headers['content-type'] ?? "";
+
+    if (response.statusCode == 200 &&
+        contentType.startsWith('application/json')) {
+      return response.body;
+    }
+  }
+
+  return "";
+});
+
 final generateServerProvider = StateNotifierProvider<
     GenerateServerPendingNotifier, AsyncValue<GenerateServer>>(
   (ref) {
     final prefs = ref.watch(sharedPreferencesInstance);
+    final local = ref.watch(localServerProvider);
+
     final value = prefs.value;
-    return (value == null)
+    final localValue = local.value;
+
+    return (value == null || localValue == null)
         ? GenerateServerPendingNotifier()
-        : GenerateServerNotifier(value);
+        : GenerateServerNotifier(value, localValue);
   },
 );
 
