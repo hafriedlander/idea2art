@@ -120,7 +120,7 @@ class GenerationExecuter {
     }
 
     ByteData? image;
-    di.Image? mask;
+    ByteData? mask;
 
     if (overlaps.isNotEmpty) {
       final paintSrc = Paint();
@@ -131,6 +131,7 @@ class GenerationExecuter {
       final imageAsUI = await stackImages(imageFrame.pos, overlaps, paintSrc);
 
       // Step 2 - remove image alphas from white to build mask source
+      // The mode "dstOut" is the trick here, removing the dst where there is src
 
       final maskRecorder = ui.PictureRecorder();
       final maskCanvas = Canvas(maskRecorder);
@@ -155,53 +156,10 @@ class GenerationExecuter {
         maskCanvas,
       );
 
-      // Step 3 - blur mask
-
-      final blurRecorder = ui.PictureRecorder();
-      final blurCanvas = Canvas(blurRecorder);
-
-      var paintBlur = Paint();
-      paintBlur.blendMode = BlendMode.src;
-      paintBlur.imageFilter = ui.ImageFilter.blur(
-        sigmaX: 64,
-        sigmaY: 64,
-        tileMode: TileMode.clamp,
-      );
-
-      blurCanvas.drawImage(maskAsUI, Offset(0, 0), paintBlur);
-
-      final blurRecording = blurRecorder.endRecording();
-      final blurAsUI = await blurRecording.toImage(
-        imageFrame.pos.width.toInt(),
-        imageFrame.pos.height.toInt(),
-      );
-
-      // Step 4 - convert image straight to PNG, we don't need pixels
+      // Step 3 - convert to PNG. We can do the channel math on the server now
 
       image = await imageAsUI.toByteData(format: ui.ImageByteFormat.png);
-
-      // Step 5 - channel math to double alpha and then pull into red channel
-      // Doubling means the area outside the overlap images will be pure white
-      // We can't do with canvas, so convert to di.Image
-
-      final bytes = await blurAsUI.toByteData(
-        format: ui.ImageByteFormat.rawStraightRgba,
-      );
-
-      mask = di.Image.fromBytes(
-        imageFrame.pos.width.toInt(),
-        imageFrame.pos.height.toInt(),
-        Uint8List.view(bytes!.buffer).toList(),
-        format: di.Format.rgba,
-      );
-
-      final maskb = mask.getBytes();
-
-      // And then adjust so out-of-image area is always white
-      for (var i = 0, len = maskb.length; i < len; i += 4) {
-        maskb[i] = maskb[i + 1] = maskb[i + 2] = min(255, maskb[i + 3] * 2);
-        maskb[i + 3] = 255;
-      }
+      mask = await maskAsUI.toByteData(format: ui.ImageByteFormat.png);
     }
 
     final prompt = ref.read(generatePromptProvider);
@@ -210,7 +168,7 @@ class GenerationExecuter {
 
     final adjustedPrompt = prompt.copyWith(
       imagePng: image != null ? Uint8List.view(image.buffer).toList() : null,
-      maskPng: mask != null ? di.encodePng(mask) : null,
+      maskPng: mask != null ? Uint8List.view(mask.buffer).toList() : null,
     );
 
     final adjustedSettings = settings.copyWith(
@@ -236,8 +194,8 @@ class GenerationExecuter {
           set.key, await decodeImageFromList(Uint8List.view(image.buffer)));
 
     if (mask != null)
-      ref.read(imageCanvasProvider.notifier).addUIImageToSet(set.key,
-          await decodeImageFromList(Uint8List.fromList(di.encodePng(mask))));
+      ref.read(imageCanvasProvider.notifier).addUIImageToSet(
+          set.key, await decodeImageFromList(Uint8List.view(mask.buffer)));
     */
 
     generate(ref, set.key, adjustedPrompt, adjustedSettings);

@@ -164,6 +164,23 @@ class GenerateService {
           artifact: Artifact(
             binary: maskPng,
             type: ArtifactType.ARTIFACT_MASK,
+            adjustments: [
+              ImageAdjustment(
+                channels: ImageAdjustment_Channels(
+                    r: ChannelSource.CHANNEL_A, a: ChannelSource.CHANNEL_ONE),
+              ),
+              ImageAdjustment(
+                blur: ImageAdjustment_Gaussian(sigma: 48),
+              ),
+              ImageAdjustment(
+                levels: ImageAdjustment_Levels(
+                  inputLow: 0,
+                  inputHigh: 0.5,
+                  outputLow: 0,
+                  outputHigh: 1,
+                ),
+              ),
+            ],
           ),
         ),
       );

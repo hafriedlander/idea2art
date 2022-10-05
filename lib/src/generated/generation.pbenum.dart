@@ -57,6 +57,48 @@ class ArtifactType extends $pb.ProtobufEnum {
   const ArtifactType._($core.int v, $core.String n) : super(v, n);
 }
 
+class ChannelSource extends $pb.ProtobufEnum {
+  static const ChannelSource CHANNEL_R = ChannelSource._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_R');
+  static const ChannelSource CHANNEL_G = ChannelSource._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_G');
+  static const ChannelSource CHANNEL_B = ChannelSource._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_B');
+  static const ChannelSource CHANNEL_A = ChannelSource._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_A');
+  static const ChannelSource CHANNEL_ZERO = ChannelSource._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_ZERO');
+  static const ChannelSource CHANNEL_ONE = ChannelSource._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_ONE');
+  static const ChannelSource CHANNEL_DISCARD = ChannelSource._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_DISCARD');
+
+  static const $core.List<ChannelSource> values = <ChannelSource> [
+    CHANNEL_R,
+    CHANNEL_G,
+    CHANNEL_B,
+    CHANNEL_A,
+    CHANNEL_ZERO,
+    CHANNEL_ONE,
+    CHANNEL_DISCARD,
+  ];
+
+  static final $core.Map<$core.int, ChannelSource> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ChannelSource? valueOf($core.int value) => _byValue[value];
+
+  const ChannelSource._($core.int v, $core.String n) : super(v, n);
+}
+
+class RescaleMode extends $pb.ProtobufEnum {
+  static const RescaleMode RESCALE_STRICT = RescaleMode._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESCALE_STRICT');
+  static const RescaleMode RESCALE_CROP = RescaleMode._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESCALE_CROP');
+  static const RescaleMode RESCALE_FIT = RescaleMode._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RESCALE_FIT');
+
+  static const $core.List<RescaleMode> values = <RescaleMode> [
+    RESCALE_STRICT,
+    RESCALE_CROP,
+    RESCALE_FIT,
+  ];
+
+  static final $core.Map<$core.int, RescaleMode> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static RescaleMode? valueOf($core.int value) => _byValue[value];
+
+  const RescaleMode._($core.int v, $core.String n) : super(v, n);
+}
+
 class DiffusionSampler extends $pb.ProtobufEnum {
   static const DiffusionSampler SAMPLER_DDIM = DiffusionSampler._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SAMPLER_DDIM');
   static const DiffusionSampler SAMPLER_DDPM = DiffusionSampler._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SAMPLER_DDPM');
@@ -101,6 +143,46 @@ class Upscaler extends $pb.ProtobufEnum {
   const Upscaler._($core.int v, $core.String n) : super(v, n);
 }
 
+class GuidancePreset extends $pb.ProtobufEnum {
+  static const GuidancePreset GUIDANCE_PRESET_NONE = GuidancePreset._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUIDANCE_PRESET_NONE');
+  static const GuidancePreset GUIDANCE_PRESET_FAST = GuidancePreset._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUIDANCE_PRESET_FAST');
+  static const GuidancePreset GUIDANCE_PRESET_EFFICIENT = GuidancePreset._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUIDANCE_PRESET_EFFICIENT');
+  static const GuidancePreset GUIDANCE_PRESET_BALANCED = GuidancePreset._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUIDANCE_PRESET_BALANCED');
+  static const GuidancePreset GUIDANCE_PRESET_QUALITY = GuidancePreset._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GUIDANCE_PRESET_QUALITY');
+
+  static const $core.List<GuidancePreset> values = <GuidancePreset> [
+    GUIDANCE_PRESET_NONE,
+    GUIDANCE_PRESET_FAST,
+    GUIDANCE_PRESET_EFFICIENT,
+    GUIDANCE_PRESET_BALANCED,
+    GUIDANCE_PRESET_QUALITY,
+  ];
+
+  static final $core.Map<$core.int, GuidancePreset> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static GuidancePreset? valueOf($core.int value) => _byValue[value];
+
+  const GuidancePreset._($core.int v, $core.String n) : super(v, n);
+}
+
+class ModelArchitecture extends $pb.ProtobufEnum {
+  static const ModelArchitecture MODEL_ARCHITECTURE_NONE = ModelArchitecture._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MODEL_ARCHITECTURE_NONE');
+  static const ModelArchitecture MODEL_ARCHITECTURE_CLIP_VIT = ModelArchitecture._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MODEL_ARCHITECTURE_CLIP_VIT');
+  static const ModelArchitecture MODEL_ARCHITECTURE_CLIP_RESNET = ModelArchitecture._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MODEL_ARCHITECTURE_CLIP_RESNET');
+  static const ModelArchitecture MODEL_ARCHITECTURE_LDM = ModelArchitecture._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MODEL_ARCHITECTURE_LDM');
+
+  static const $core.List<ModelArchitecture> values = <ModelArchitecture> [
+    MODEL_ARCHITECTURE_NONE,
+    MODEL_ARCHITECTURE_CLIP_VIT,
+    MODEL_ARCHITECTURE_CLIP_RESNET,
+    MODEL_ARCHITECTURE_LDM,
+  ];
+
+  static final $core.Map<$core.int, ModelArchitecture> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ModelArchitecture? valueOf($core.int value) => _byValue[value];
+
+  const ModelArchitecture._($core.int v, $core.String n) : super(v, n);
+}
+
 class Action extends $pb.ProtobufEnum {
   static const Action ACTION_PASSTHROUGH = Action._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ACTION_PASSTHROUGH');
   static const Action ACTION_REGENERATE_DUPLICATE = Action._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ACTION_REGENERATE_DUPLICATE');
@@ -137,6 +219,23 @@ class ClassifierMode extends $pb.ProtobufEnum {
   static ClassifierMode? valueOf($core.int value) => _byValue[value];
 
   const ClassifierMode._($core.int v, $core.String n) : super(v, n);
+}
+
+class AssetAction extends $pb.ProtobufEnum {
+  static const AssetAction ASSET_PUT = AssetAction._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ASSET_PUT');
+  static const AssetAction ASSET_GET = AssetAction._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ASSET_GET');
+  static const AssetAction ASSET_DELETE = AssetAction._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ASSET_DELETE');
+
+  static const $core.List<AssetAction> values = <AssetAction> [
+    ASSET_PUT,
+    ASSET_GET,
+    ASSET_DELETE,
+  ];
+
+  static final $core.Map<$core.int, AssetAction> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static AssetAction? valueOf($core.int value) => _byValue[value];
+
+  const AssetAction._($core.int v, $core.String n) : super(v, n);
 }
 
 class StageAction extends $pb.ProtobufEnum {

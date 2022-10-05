@@ -492,13 +492,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  protoc_builder:
-    dependency: "direct dev"
-    description:
-      name: protoc_builder
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.1+1"
   pub_semver:
     dependency: transitive
     description:

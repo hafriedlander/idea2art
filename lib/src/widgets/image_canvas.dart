@@ -317,50 +317,34 @@ class HittableImage extends Hittable {
         );
 }
 
-class ImageCanvasWidget extends HookConsumerWidget {
-  const ImageCanvasWidget({this.selected = false, super.key});
+class ImageCanvaHitTests {
+  final Rect? frame;
+  final Iterable<ImageCanvasImageSet> imagesets;
 
-  final bool selected;
+  ImageCanvaHitTests(this.frame, this.imagesets);
 
-  List<Hittable> _hittables(
-    Rect frame,
-    ImageCanvas canvasImage, {
-    bool excludeFrame = false,
-    ImageCanvasImageSet? excludeImageSet,
-  }) {
-    return [
-      ...(excludeFrame
-          ? []
-          : [Hittable(rect: frame, type: HittableType.frame)]),
-      ...canvasImage.imagesets
-          .where((imageset) =>
-              excludeImageSet == null || imageset.key != excludeImageSet.key)
-          .map<Hittable>(
-            (imageset) => HittableImage.fromImageset(imageset: imageset),
-          ),
-    ];
+  bool frameHittest(Offset pos) {
+    return frame?.contains(pos) ?? false;
   }
 
-  Hittable? _hitTest(Rect frame, ImageCanvas canvasImage, Offset pos) {
-    List<Hittable> hittables = _hittables(frame, canvasImage);
-
-    return hittables.firstWhereOrNull(
-      (hittable) => hittable.rect.contains(pos),
-    );
+  ImageCanvasImageSet? imagesetHittest(Offset pos, {int excludeSetKey = -1}) {
+    return imagesets.lastWhereOrNull((set) => set.pos.contains(pos));
   }
 
-  Offset _snapTest(Rect snapee, List<Hittable> hittables) {
+  Offset snapTest(Rect snapee) {
+    const rectDistance = 128.0;
     const snapDistance = 32.0;
 
     var snapDelta = const Offset(0, 0);
 
-    for (var hittable in hittables.reversed) {
-      if (snapee.overlaps(hittable.rect.inflate(snapDistance))) {
-        final hys = [
-          hittable.rect.top,
-          hittable.rect.centerLeft.dy,
-          hittable.rect.bottom,
-        ];
+    final List<Rect> rects = [
+      ...(frame == null ? [] : [frame!]),
+      ...imagesets.map((set) => set.pos),
+    ];
+
+    for (var rect in rects.reversed) {
+      if (snapee.overlaps(rect.inflate(rectDistance))) {
+        final hys = [rect.top, rect.centerLeft.dy, rect.bottom];
         final sys = [snapee.top, snapee.bottom];
 
         for (var hy in hys) {
@@ -371,11 +355,7 @@ class ImageCanvasWidget extends HookConsumerWidget {
           }
         }
 
-        final hxs = [
-          hittable.rect.left,
-          hittable.rect.topCenter.dx,
-          hittable.rect.right,
-        ];
+        final hxs = [rect.left, rect.topCenter.dx, rect.right];
         final sxs = [snapee.left, snapee.right];
 
         for (var hx in hxs) {
@@ -390,6 +370,10 @@ class ImageCanvasWidget extends HookConsumerWidget {
 
     return snapDelta;
   }
+}
+
+class ImageCanvasWidget extends HookConsumerWidget {
+  const ImageCanvasWidget({super.key});
 
   List<Widget> _buildImages(ImageCanvas images) {
     return images.imagesets
@@ -411,12 +395,22 @@ class ImageCanvasWidget extends HookConsumerWidget {
     final canvasPos = useState<Offset>(Offset(0, 0));
     final canvasScale = useState<double>(1);
 
-    final frameSelected = useState<bool>(false);
-
-    final panStart = useState<Offset>(const Offset(0, 0));
-    final hitStart = useState<Offset>(const Offset(0, 0));
+    final panStart = useState<Offset?>(const Offset(0, 0));
+    final hitCanvas = useState<Offset>(const Offset(0, 0));
+    final hitFrame = useState<Rect?>(null);
+    final hitSet = useState<ImageCanvasImageSet?>(null);
 
     final ImageCanvasImageSet? selectedImageset = images.selectedImageset();
+
+    Offset gesturePointToCanvas(Offset point, [ValueNotifier<Offset>? canvas]) {
+      return (point -
+                  Offset(
+                    (context.size?.width ?? 0) / 2,
+                    (context.size?.height ?? 0) / 2,
+                  )) /
+              canvasScale.value -
+          (canvas ?? canvasPos).value;
+    }
 
     return Container(
       clipBehavior: Clip.hardEdge,
@@ -438,88 +432,90 @@ class ImageCanvasWidget extends HookConsumerWidget {
             // This GestureDetector is used for panning, scaling and mask / paint modes
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onScaleStart: (details) {
-                panStart.value = (details.localFocalPoint -
-                        Offset(
-                          (context.size?.width ?? 0) / 2,
-                          (context.size?.height ?? 0) / 2,
-                        )) /
-                    canvasScale.value;
+              onTapDown: (details) {},
+              onTapUp: (details) {
+                // If we tapped (without pan), treat it like a select / unselect
+                final hitpos = gesturePointToCanvas(details.localPosition);
 
-                final hit = _hitTest(
-                  frame,
-                  images,
-                  panStart.value - canvasPos.value,
-                );
+                final tester = ImageCanvaHitTests(frame, images.imagesets);
+                final hitSet = tester.imagesetHittest(hitpos);
 
-                if (hit == null) {
-                  frameSelected.value = false;
+                if (hitSet == null) {
                   ref.read(imageCanvasProvider.notifier).unselect();
-                  hitStart.value = canvasPos.value;
                 } else {
-                  hitStart.value = hit.rect.center;
-                  frameSelected.value = (hit.type == HittableType.frame);
+                  ref.read(imageCanvasProvider.notifier).select(hitSet.key);
+                }
+              },
+              onScaleStart: (details) {
+                // Remember original position of everything we hit and might pan
+                final hitpos = gesturePointToCanvas(details.localFocalPoint);
+                final tester = ImageCanvaHitTests(frame, images.imagesets);
 
-                  if (hit is HittableImage) {
-                    ref
-                        .read(imageCanvasProvider.notifier)
-                        .select(hit.imagesetkey);
-                  } else {
-                    ref.read(imageCanvasProvider.notifier).unselect();
-                  }
+                panStart.value = hitpos;
+                hitFrame.value = tester.frameHittest(hitpos) ? frame : null;
+                hitSet.value = tester.imagesetHittest(hitpos);
+                hitCanvas.value = canvasPos.value;
+
+                // If we're going to move the hitSet (instead of hitFrame) select it too
+                if (hitFrame.value == null && hitSet.value != null) {
+                  ref
+                      .read(imageCanvasProvider.notifier)
+                      .select(hitSet.value!.key);
                 }
               },
               onScaleUpdate: (details) {
-                final pos = (details.localFocalPoint -
-                        Offset(
-                          (context.size?.width ?? 0) / 2,
-                          (context.size?.height ?? 0) / 2,
-                        )) /
-                    canvasScale.value;
+                // Since we might be moving the canvas, use the remembered canvas details
+                final pos = gesturePointToCanvas(
+                  details.localFocalPoint,
+                  hitCanvas,
+                );
 
-                final delta = pos - panStart.value;
+                // We always move the panned item "original position" + "total delta from start"
+                final delta = pos - panStart.value!;
 
-                if (selectedImageset != null) {
-                  var newPos = Rect.fromCenter(
-                    center: hitStart.value + delta,
-                    width: selectedImageset.pos.width,
-                    height: selectedImageset.pos.height,
-                  );
+                final hitFrameVal = hitFrame.value;
+                final hitSetVal = hitSet.value;
 
-                  newPos = newPos.shift(_snapTest(
-                      newPos,
-                      _hittables(frame, images,
-                          excludeImageSet: selectedImageset)));
+                if (hitFrameVal != null) {
+                  // Frame always has highest hit priority on pan
+                  final tester = ImageCanvaHitTests(null, images.imagesets);
 
-                  ref.read(imageCanvasProvider.notifier).setImageSetCenter(
-                        selectedImageset.key,
-                        newPos.center,
-                      );
-                } else if (frameSelected.value) {
-                  var newPos = Rect.fromCenter(
-                    center: hitStart.value + delta,
-                    width: frame.width,
-                    height: frame.height,
-                  );
-
-                  newPos = newPos.shift(_snapTest(
-                      newPos, _hittables(frame, images, excludeFrame: true)));
+                  var newPos = hitFrameVal.shift(delta);
+                  newPos = newPos.shift(tester.snapTest(newPos));
 
                   ref
                       .read(imageCanvasFrameProvider.notifier)
                       .setCenter(newPos.center);
+                } else if (hitSetVal != null) {
+                  // Imageset has next highest hit priority
+                  final tester = ImageCanvaHitTests(
+                    frame,
+                    images.imagesets.where((set) => set.key != hitSetVal.key),
+                  );
+
+                  var newPos = hitSetVal.pos.shift(delta);
+                  newPos = newPos.shift(tester.snapTest(newPos));
+
+                  ref.read(imageCanvasProvider.notifier).setImageSetCenter(
+                        hitSetVal.key,
+                        newPos.center,
+                      );
                 } else {
-                  canvasPos.value = hitStart.value + delta;
+                  // And if we hit nothing, pan the canvas
+                  canvasPos.value = hitCanvas.value + delta;
                 }
               },
               onScaleEnd: (details) {
-                debugPrint("End");
+                panStart.value = null;
               },
               child: Center(
                 child: SizedBox(
                   width: 1,
                   height: 1,
                   child: Transform(
+                    filterQuality: panStart.value == null
+                        ? FilterQuality.medium
+                        : FilterQuality.none,
                     transform: (Matrix4.identity() * canvasScale.value) *
                         Matrix4.translation(
                           vm.Vector3(

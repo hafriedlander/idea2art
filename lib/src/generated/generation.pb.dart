@@ -130,6 +130,477 @@ class Tokens extends $pb.GeneratedMessage {
   void clearTokenizerId() => clearField(2);
 }
 
+class ImageAdjustment_Gaussian extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Gaussian', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sigma', $pb.PbFieldType.OF)
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment_Gaussian._() : super();
+  factory ImageAdjustment_Gaussian({
+    $core.double? sigma,
+  }) {
+    final _result = create();
+    if (sigma != null) {
+      _result.sigma = sigma;
+    }
+    return _result;
+  }
+  factory ImageAdjustment_Gaussian.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment_Gaussian.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Gaussian clone() => ImageAdjustment_Gaussian()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Gaussian copyWith(void Function(ImageAdjustment_Gaussian) updates) => super.copyWith((message) => updates(message as ImageAdjustment_Gaussian)) as ImageAdjustment_Gaussian; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Gaussian create() => ImageAdjustment_Gaussian._();
+  ImageAdjustment_Gaussian createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment_Gaussian> createRepeated() => $pb.PbList<ImageAdjustment_Gaussian>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Gaussian getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment_Gaussian>(create);
+  static ImageAdjustment_Gaussian? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get sigma => $_getN(0);
+  @$pb.TagNumber(1)
+  set sigma($core.double v) { $_setFloat(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSigma() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSigma() => clearField(1);
+}
+
+class ImageAdjustment_Invert extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Invert', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment_Invert._() : super();
+  factory ImageAdjustment_Invert() => create();
+  factory ImageAdjustment_Invert.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment_Invert.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Invert clone() => ImageAdjustment_Invert()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Invert copyWith(void Function(ImageAdjustment_Invert) updates) => super.copyWith((message) => updates(message as ImageAdjustment_Invert)) as ImageAdjustment_Invert; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Invert create() => ImageAdjustment_Invert._();
+  ImageAdjustment_Invert createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment_Invert> createRepeated() => $pb.PbList<ImageAdjustment_Invert>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Invert getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment_Invert>(create);
+  static ImageAdjustment_Invert? _defaultInstance;
+}
+
+class ImageAdjustment_Levels extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Levels', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'inputLow', $pb.PbFieldType.OF)
+    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'inputHigh', $pb.PbFieldType.OF)
+    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'outputLow', $pb.PbFieldType.OF)
+    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'outputHigh', $pb.PbFieldType.OF)
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment_Levels._() : super();
+  factory ImageAdjustment_Levels({
+    $core.double? inputLow,
+    $core.double? inputHigh,
+    $core.double? outputLow,
+    $core.double? outputHigh,
+  }) {
+    final _result = create();
+    if (inputLow != null) {
+      _result.inputLow = inputLow;
+    }
+    if (inputHigh != null) {
+      _result.inputHigh = inputHigh;
+    }
+    if (outputLow != null) {
+      _result.outputLow = outputLow;
+    }
+    if (outputHigh != null) {
+      _result.outputHigh = outputHigh;
+    }
+    return _result;
+  }
+  factory ImageAdjustment_Levels.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment_Levels.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Levels clone() => ImageAdjustment_Levels()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Levels copyWith(void Function(ImageAdjustment_Levels) updates) => super.copyWith((message) => updates(message as ImageAdjustment_Levels)) as ImageAdjustment_Levels; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Levels create() => ImageAdjustment_Levels._();
+  ImageAdjustment_Levels createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment_Levels> createRepeated() => $pb.PbList<ImageAdjustment_Levels>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Levels getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment_Levels>(create);
+  static ImageAdjustment_Levels? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.double get inputLow => $_getN(0);
+  @$pb.TagNumber(1)
+  set inputLow($core.double v) { $_setFloat(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasInputLow() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearInputLow() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get inputHigh => $_getN(1);
+  @$pb.TagNumber(2)
+  set inputHigh($core.double v) { $_setFloat(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasInputHigh() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInputHigh() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get outputLow => $_getN(2);
+  @$pb.TagNumber(3)
+  set outputLow($core.double v) { $_setFloat(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasOutputLow() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOutputLow() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get outputHigh => $_getN(3);
+  @$pb.TagNumber(4)
+  set outputHigh($core.double v) { $_setFloat(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasOutputHigh() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearOutputHigh() => clearField(4);
+}
+
+class ImageAdjustment_Channels extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Channels', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..e<ChannelSource>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'r', $pb.PbFieldType.OE, defaultOrMaker: ChannelSource.CHANNEL_R, valueOf: ChannelSource.valueOf, enumValues: ChannelSource.values)
+    ..e<ChannelSource>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'g', $pb.PbFieldType.OE, defaultOrMaker: ChannelSource.CHANNEL_R, valueOf: ChannelSource.valueOf, enumValues: ChannelSource.values)
+    ..e<ChannelSource>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'b', $pb.PbFieldType.OE, defaultOrMaker: ChannelSource.CHANNEL_R, valueOf: ChannelSource.valueOf, enumValues: ChannelSource.values)
+    ..e<ChannelSource>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'a', $pb.PbFieldType.OE, defaultOrMaker: ChannelSource.CHANNEL_R, valueOf: ChannelSource.valueOf, enumValues: ChannelSource.values)
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment_Channels._() : super();
+  factory ImageAdjustment_Channels({
+    ChannelSource? r,
+    ChannelSource? g,
+    ChannelSource? b,
+    ChannelSource? a,
+  }) {
+    final _result = create();
+    if (r != null) {
+      _result.r = r;
+    }
+    if (g != null) {
+      _result.g = g;
+    }
+    if (b != null) {
+      _result.b = b;
+    }
+    if (a != null) {
+      _result.a = a;
+    }
+    return _result;
+  }
+  factory ImageAdjustment_Channels.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment_Channels.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Channels clone() => ImageAdjustment_Channels()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Channels copyWith(void Function(ImageAdjustment_Channels) updates) => super.copyWith((message) => updates(message as ImageAdjustment_Channels)) as ImageAdjustment_Channels; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Channels create() => ImageAdjustment_Channels._();
+  ImageAdjustment_Channels createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment_Channels> createRepeated() => $pb.PbList<ImageAdjustment_Channels>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Channels getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment_Channels>(create);
+  static ImageAdjustment_Channels? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ChannelSource get r => $_getN(0);
+  @$pb.TagNumber(1)
+  set r(ChannelSource v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasR() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearR() => clearField(1);
+
+  @$pb.TagNumber(2)
+  ChannelSource get g => $_getN(1);
+  @$pb.TagNumber(2)
+  set g(ChannelSource v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasG() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearG() => clearField(2);
+
+  @$pb.TagNumber(3)
+  ChannelSource get b => $_getN(2);
+  @$pb.TagNumber(3)
+  set b(ChannelSource v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasB() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearB() => clearField(3);
+
+  @$pb.TagNumber(4)
+  ChannelSource get a => $_getN(3);
+  @$pb.TagNumber(4)
+  set a(ChannelSource v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasA() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearA() => clearField(4);
+}
+
+class ImageAdjustment_Rescale extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Rescale', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'height', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'width', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..e<RescaleMode>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'mode', $pb.PbFieldType.OE, defaultOrMaker: RescaleMode.RESCALE_STRICT, valueOf: RescaleMode.valueOf, enumValues: RescaleMode.values)
+    ..pPS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'algorithmHint')
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment_Rescale._() : super();
+  factory ImageAdjustment_Rescale({
+    $fixnum.Int64? height,
+    $fixnum.Int64? width,
+    RescaleMode? mode,
+    $core.Iterable<$core.String>? algorithmHint,
+  }) {
+    final _result = create();
+    if (height != null) {
+      _result.height = height;
+    }
+    if (width != null) {
+      _result.width = width;
+    }
+    if (mode != null) {
+      _result.mode = mode;
+    }
+    if (algorithmHint != null) {
+      _result.algorithmHint.addAll(algorithmHint);
+    }
+    return _result;
+  }
+  factory ImageAdjustment_Rescale.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment_Rescale.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Rescale clone() => ImageAdjustment_Rescale()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Rescale copyWith(void Function(ImageAdjustment_Rescale) updates) => super.copyWith((message) => updates(message as ImageAdjustment_Rescale)) as ImageAdjustment_Rescale; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Rescale create() => ImageAdjustment_Rescale._();
+  ImageAdjustment_Rescale createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment_Rescale> createRepeated() => $pb.PbList<ImageAdjustment_Rescale>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Rescale getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment_Rescale>(create);
+  static ImageAdjustment_Rescale? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get height => $_getI64(0);
+  @$pb.TagNumber(1)
+  set height($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasHeight() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearHeight() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get width => $_getI64(1);
+  @$pb.TagNumber(2)
+  set width($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasWidth() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearWidth() => clearField(2);
+
+  @$pb.TagNumber(3)
+  RescaleMode get mode => $_getN(2);
+  @$pb.TagNumber(3)
+  set mode(RescaleMode v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasMode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearMode() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.List<$core.String> get algorithmHint => $_getList(3);
+}
+
+enum ImageAdjustment_Adjustment {
+  blur, 
+  invert, 
+  levels, 
+  channels, 
+  rescale, 
+  notSet
+}
+
+class ImageAdjustment extends $pb.GeneratedMessage {
+  static const $core.Map<$core.int, ImageAdjustment_Adjustment> _ImageAdjustment_AdjustmentByTag = {
+    1 : ImageAdjustment_Adjustment.blur,
+    2 : ImageAdjustment_Adjustment.invert,
+    3 : ImageAdjustment_Adjustment.levels,
+    4 : ImageAdjustment_Adjustment.channels,
+    5 : ImageAdjustment_Adjustment.rescale,
+    0 : ImageAdjustment_Adjustment.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..oo(0, [1, 2, 3, 4, 5])
+    ..aOM<ImageAdjustment_Gaussian>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'blur', subBuilder: ImageAdjustment_Gaussian.create)
+    ..aOM<ImageAdjustment_Invert>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'invert', subBuilder: ImageAdjustment_Invert.create)
+    ..aOM<ImageAdjustment_Levels>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'levels', subBuilder: ImageAdjustment_Levels.create)
+    ..aOM<ImageAdjustment_Channels>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'channels', subBuilder: ImageAdjustment_Channels.create)
+    ..aOM<ImageAdjustment_Rescale>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rescale', subBuilder: ImageAdjustment_Rescale.create)
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment._() : super();
+  factory ImageAdjustment({
+    ImageAdjustment_Gaussian? blur,
+    ImageAdjustment_Invert? invert,
+    ImageAdjustment_Levels? levels,
+    ImageAdjustment_Channels? channels,
+    ImageAdjustment_Rescale? rescale,
+  }) {
+    final _result = create();
+    if (blur != null) {
+      _result.blur = blur;
+    }
+    if (invert != null) {
+      _result.invert = invert;
+    }
+    if (levels != null) {
+      _result.levels = levels;
+    }
+    if (channels != null) {
+      _result.channels = channels;
+    }
+    if (rescale != null) {
+      _result.rescale = rescale;
+    }
+    return _result;
+  }
+  factory ImageAdjustment.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment clone() => ImageAdjustment()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment copyWith(void Function(ImageAdjustment) updates) => super.copyWith((message) => updates(message as ImageAdjustment)) as ImageAdjustment; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment create() => ImageAdjustment._();
+  ImageAdjustment createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment> createRepeated() => $pb.PbList<ImageAdjustment>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment>(create);
+  static ImageAdjustment? _defaultInstance;
+
+  ImageAdjustment_Adjustment whichAdjustment() => _ImageAdjustment_AdjustmentByTag[$_whichOneof(0)]!;
+  void clearAdjustment() => clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  ImageAdjustment_Gaussian get blur => $_getN(0);
+  @$pb.TagNumber(1)
+  set blur(ImageAdjustment_Gaussian v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasBlur() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBlur() => clearField(1);
+  @$pb.TagNumber(1)
+  ImageAdjustment_Gaussian ensureBlur() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  ImageAdjustment_Invert get invert => $_getN(1);
+  @$pb.TagNumber(2)
+  set invert(ImageAdjustment_Invert v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasInvert() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearInvert() => clearField(2);
+  @$pb.TagNumber(2)
+  ImageAdjustment_Invert ensureInvert() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  ImageAdjustment_Levels get levels => $_getN(2);
+  @$pb.TagNumber(3)
+  set levels(ImageAdjustment_Levels v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasLevels() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLevels() => clearField(3);
+  @$pb.TagNumber(3)
+  ImageAdjustment_Levels ensureLevels() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  ImageAdjustment_Channels get channels => $_getN(3);
+  @$pb.TagNumber(4)
+  set channels(ImageAdjustment_Channels v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasChannels() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearChannels() => clearField(4);
+  @$pb.TagNumber(4)
+  ImageAdjustment_Channels ensureChannels() => $_ensure(3);
+
+  @$pb.TagNumber(5)
+  ImageAdjustment_Rescale get rescale => $_getN(4);
+  @$pb.TagNumber(5)
+  set rescale(ImageAdjustment_Rescale v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasRescale() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRescale() => clearField(5);
+  @$pb.TagNumber(5)
+  ImageAdjustment_Rescale ensureRescale() => $_ensure(4);
+}
+
 enum Artifact_Data {
   binary, 
   text, 
@@ -159,6 +630,8 @@ class Artifact extends $pb.GeneratedMessage {
     ..e<FinishReason>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'finishReason', $pb.PbFieldType.OE, defaultOrMaker: FinishReason.NULL, valueOf: FinishReason.valueOf, enumValues: FinishReason.values)
     ..a<$core.int>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'seed', $pb.PbFieldType.OU3)
     ..aOM<ClassifierParameters>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'classifier', subBuilder: ClassifierParameters.create)
+    ..pc<ImageAdjustment>(500, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'adjustments', $pb.PbFieldType.PM, subBuilder: ImageAdjustment.create)
+    ..pc<ImageAdjustment>(501, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'postAdjustments', $pb.PbFieldType.PM, protoName: 'postAdjustments', subBuilder: ImageAdjustment.create)
     ..hasRequiredFields = false
   ;
 
@@ -175,6 +648,8 @@ class Artifact extends $pb.GeneratedMessage {
     FinishReason? finishReason,
     $core.int? seed,
     ClassifierParameters? classifier,
+    $core.Iterable<ImageAdjustment>? adjustments,
+    $core.Iterable<ImageAdjustment>? postAdjustments,
   }) {
     final _result = create();
     if (id != null) {
@@ -209,6 +684,12 @@ class Artifact extends $pb.GeneratedMessage {
     }
     if (classifier != null) {
       _result.classifier = classifier;
+    }
+    if (adjustments != null) {
+      _result.adjustments.addAll(adjustments);
+    }
+    if (postAdjustments != null) {
+      _result.postAdjustments.addAll(postAdjustments);
     }
     return _result;
   }
@@ -338,6 +819,12 @@ class Artifact extends $pb.GeneratedMessage {
   void clearClassifier() => clearField(11);
   @$pb.TagNumber(11)
   ClassifierParameters ensureClassifier() => $_ensure(10);
+
+  @$pb.TagNumber(500)
+  $core.List<ImageAdjustment> get adjustments => $_getList(11);
+
+  @$pb.TagNumber(501)
+  $core.List<ImageAdjustment> get postAdjustments => $_getList(12);
 }
 
 class PromptParameters extends $pb.GeneratedMessage {
@@ -513,208 +1000,6 @@ class Prompt extends $pb.GeneratedMessage {
   Artifact ensureArtifact() => $_ensure(3);
 }
 
-class AnswerMeta extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AnswerMeta', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gpuId')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cpuId')
-    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'nodeId')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'engineId')
-    ..hasRequiredFields = false
-  ;
-
-  AnswerMeta._() : super();
-  factory AnswerMeta({
-    $core.String? gpuId,
-    $core.String? cpuId,
-    $core.String? nodeId,
-    $core.String? engineId,
-  }) {
-    final _result = create();
-    if (gpuId != null) {
-      _result.gpuId = gpuId;
-    }
-    if (cpuId != null) {
-      _result.cpuId = cpuId;
-    }
-    if (nodeId != null) {
-      _result.nodeId = nodeId;
-    }
-    if (engineId != null) {
-      _result.engineId = engineId;
-    }
-    return _result;
-  }
-  factory AnswerMeta.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AnswerMeta.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  AnswerMeta clone() => AnswerMeta()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  AnswerMeta copyWith(void Function(AnswerMeta) updates) => super.copyWith((message) => updates(message as AnswerMeta)) as AnswerMeta; // ignore: deprecated_member_use
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static AnswerMeta create() => AnswerMeta._();
-  AnswerMeta createEmptyInstance() => create();
-  static $pb.PbList<AnswerMeta> createRepeated() => $pb.PbList<AnswerMeta>();
-  @$core.pragma('dart2js:noInline')
-  static AnswerMeta getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AnswerMeta>(create);
-  static AnswerMeta? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get gpuId => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set gpuId($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasGpuId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearGpuId() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get cpuId => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set cpuId($core.String v) { $_setString(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasCpuId() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearCpuId() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.String get nodeId => $_getSZ(2);
-  @$pb.TagNumber(3)
-  set nodeId($core.String v) { $_setString(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasNodeId() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearNodeId() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $core.String get engineId => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set engineId($core.String v) { $_setString(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasEngineId() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearEngineId() => clearField(4);
-}
-
-class Answer extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Answer', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'answerId')
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
-    ..a<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'received', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$fixnum.Int64>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOM<AnswerMeta>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'meta', subBuilder: AnswerMeta.create)
-    ..pc<Artifact>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'artifacts', $pb.PbFieldType.PM, subBuilder: Artifact.create)
-    ..hasRequiredFields = false
-  ;
-
-  Answer._() : super();
-  factory Answer({
-    $core.String? answerId,
-    $core.String? requestId,
-    $fixnum.Int64? received,
-    $fixnum.Int64? created,
-    AnswerMeta? meta,
-    $core.Iterable<Artifact>? artifacts,
-  }) {
-    final _result = create();
-    if (answerId != null) {
-      _result.answerId = answerId;
-    }
-    if (requestId != null) {
-      _result.requestId = requestId;
-    }
-    if (received != null) {
-      _result.received = received;
-    }
-    if (created != null) {
-      _result.created = created;
-    }
-    if (meta != null) {
-      _result.meta = meta;
-    }
-    if (artifacts != null) {
-      _result.artifacts.addAll(artifacts);
-    }
-    return _result;
-  }
-  factory Answer.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory Answer.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  Answer clone() => Answer()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  Answer copyWith(void Function(Answer) updates) => super.copyWith((message) => updates(message as Answer)) as Answer; // ignore: deprecated_member_use
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static Answer create() => Answer._();
-  Answer createEmptyInstance() => create();
-  static $pb.PbList<Answer> createRepeated() => $pb.PbList<Answer>();
-  @$core.pragma('dart2js:noInline')
-  static Answer getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Answer>(create);
-  static Answer? _defaultInstance;
-
-  @$pb.TagNumber(1)
-  $core.String get answerId => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set answerId($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasAnswerId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearAnswerId() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.String get requestId => $_getSZ(1);
-  @$pb.TagNumber(2)
-  set requestId($core.String v) { $_setString(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasRequestId() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearRequestId() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $fixnum.Int64 get received => $_getI64(2);
-  @$pb.TagNumber(3)
-  set received($fixnum.Int64 v) { $_setInt64(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasReceived() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearReceived() => clearField(3);
-
-  @$pb.TagNumber(4)
-  $fixnum.Int64 get created => $_getI64(3);
-  @$pb.TagNumber(4)
-  set created($fixnum.Int64 v) { $_setInt64(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasCreated() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearCreated() => clearField(4);
-
-  @$pb.TagNumber(6)
-  AnswerMeta get meta => $_getN(4);
-  @$pb.TagNumber(6)
-  set meta(AnswerMeta v) { setField(6, v); }
-  @$pb.TagNumber(6)
-  $core.bool hasMeta() => $_has(4);
-  @$pb.TagNumber(6)
-  void clearMeta() => clearField(6);
-  @$pb.TagNumber(6)
-  AnswerMeta ensureMeta() => $_ensure(4);
-
-  @$pb.TagNumber(7)
-  $core.List<Artifact> get artifacts => $_getList(5);
-}
-
 class SamplerParameters extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SamplerParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'eta', $pb.PbFieldType.OF)
@@ -821,16 +1106,21 @@ class SamplerParameters extends $pb.GeneratedMessage {
 class ConditionerParameters extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ConditionerParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'vectorAdjustPrior')
+    ..aOM<Model>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'conditioner', subBuilder: Model.create)
     ..hasRequiredFields = false
   ;
 
   ConditionerParameters._() : super();
   factory ConditionerParameters({
     $core.String? vectorAdjustPrior,
+    Model? conditioner,
   }) {
     final _result = create();
     if (vectorAdjustPrior != null) {
       _result.vectorAdjustPrior = vectorAdjustPrior;
+    }
+    if (conditioner != null) {
+      _result.conditioner = conditioner;
     }
     return _result;
   }
@@ -863,6 +1153,17 @@ class ConditionerParameters extends $pb.GeneratedMessage {
   $core.bool hasVectorAdjustPrior() => $_has(0);
   @$pb.TagNumber(1)
   void clearVectorAdjustPrior() => clearField(1);
+
+  @$pb.TagNumber(2)
+  Model get conditioner => $_getN(1);
+  @$pb.TagNumber(2)
+  set conditioner(Model v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasConditioner() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearConditioner() => clearField(2);
+  @$pb.TagNumber(2)
+  Model ensureConditioner() => $_ensure(1);
 }
 
 class ScheduleParameters extends $pb.GeneratedMessage {
@@ -931,6 +1232,7 @@ class StepParameter extends $pb.GeneratedMessage {
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'scaledStep', $pb.PbFieldType.OF)
     ..aOM<SamplerParameters>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sampler', subBuilder: SamplerParameters.create)
     ..aOM<ScheduleParameters>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'schedule', subBuilder: ScheduleParameters.create)
+    ..aOM<GuidanceParameters>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'guidance', subBuilder: GuidanceParameters.create)
     ..hasRequiredFields = false
   ;
 
@@ -939,6 +1241,7 @@ class StepParameter extends $pb.GeneratedMessage {
     $core.double? scaledStep,
     SamplerParameters? sampler,
     ScheduleParameters? schedule,
+    GuidanceParameters? guidance,
   }) {
     final _result = create();
     if (scaledStep != null) {
@@ -949,6 +1252,9 @@ class StepParameter extends $pb.GeneratedMessage {
     }
     if (schedule != null) {
       _result.schedule = schedule;
+    }
+    if (guidance != null) {
+      _result.guidance = guidance;
     }
     return _result;
   }
@@ -1003,6 +1309,381 @@ class StepParameter extends $pb.GeneratedMessage {
   void clearSchedule() => clearField(3);
   @$pb.TagNumber(3)
   ScheduleParameters ensureSchedule() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  GuidanceParameters get guidance => $_getN(3);
+  @$pb.TagNumber(4)
+  set guidance(GuidanceParameters v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasGuidance() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearGuidance() => clearField(4);
+  @$pb.TagNumber(4)
+  GuidanceParameters ensureGuidance() => $_ensure(3);
+}
+
+class Model extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Model', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..e<ModelArchitecture>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'architecture', $pb.PbFieldType.OE, defaultOrMaker: ModelArchitecture.MODEL_ARCHITECTURE_NONE, valueOf: ModelArchitecture.valueOf, enumValues: ModelArchitecture.values)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'publisher')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dataset')
+    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'version', $pb.PbFieldType.OF)
+    ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'semanticVersion')
+    ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'alias')
+    ..hasRequiredFields = false
+  ;
+
+  Model._() : super();
+  factory Model({
+    ModelArchitecture? architecture,
+    $core.String? publisher,
+    $core.String? dataset,
+    $core.double? version,
+    $core.String? semanticVersion,
+    $core.String? alias,
+  }) {
+    final _result = create();
+    if (architecture != null) {
+      _result.architecture = architecture;
+    }
+    if (publisher != null) {
+      _result.publisher = publisher;
+    }
+    if (dataset != null) {
+      _result.dataset = dataset;
+    }
+    if (version != null) {
+      _result.version = version;
+    }
+    if (semanticVersion != null) {
+      _result.semanticVersion = semanticVersion;
+    }
+    if (alias != null) {
+      _result.alias = alias;
+    }
+    return _result;
+  }
+  factory Model.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Model.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Model clone() => Model()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Model copyWith(void Function(Model) updates) => super.copyWith((message) => updates(message as Model)) as Model; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Model create() => Model._();
+  Model createEmptyInstance() => create();
+  static $pb.PbList<Model> createRepeated() => $pb.PbList<Model>();
+  @$core.pragma('dart2js:noInline')
+  static Model getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Model>(create);
+  static Model? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  ModelArchitecture get architecture => $_getN(0);
+  @$pb.TagNumber(1)
+  set architecture(ModelArchitecture v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasArchitecture() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearArchitecture() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get publisher => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set publisher($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasPublisher() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPublisher() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get dataset => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set dataset($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasDataset() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearDataset() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get version => $_getN(3);
+  @$pb.TagNumber(4)
+  set version($core.double v) { $_setFloat(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasVersion() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearVersion() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get semanticVersion => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set semanticVersion($core.String v) { $_setString(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasSemanticVersion() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSemanticVersion() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get alias => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set alias($core.String v) { $_setString(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasAlias() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearAlias() => clearField(6);
+}
+
+class CutoutParameters extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CutoutParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..pc<CutoutParameters>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cutouts', $pb.PbFieldType.PM, subBuilder: CutoutParameters.create)
+    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'count', $pb.PbFieldType.OU3)
+    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gray', $pb.PbFieldType.OF)
+    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'blur', $pb.PbFieldType.OF)
+    ..a<$core.double>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sizePower', $pb.PbFieldType.OF)
+    ..hasRequiredFields = false
+  ;
+
+  CutoutParameters._() : super();
+  factory CutoutParameters({
+    $core.Iterable<CutoutParameters>? cutouts,
+    $core.int? count,
+    $core.double? gray,
+    $core.double? blur,
+    $core.double? sizePower,
+  }) {
+    final _result = create();
+    if (cutouts != null) {
+      _result.cutouts.addAll(cutouts);
+    }
+    if (count != null) {
+      _result.count = count;
+    }
+    if (gray != null) {
+      _result.gray = gray;
+    }
+    if (blur != null) {
+      _result.blur = blur;
+    }
+    if (sizePower != null) {
+      _result.sizePower = sizePower;
+    }
+    return _result;
+  }
+  factory CutoutParameters.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CutoutParameters.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  CutoutParameters clone() => CutoutParameters()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  CutoutParameters copyWith(void Function(CutoutParameters) updates) => super.copyWith((message) => updates(message as CutoutParameters)) as CutoutParameters; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CutoutParameters create() => CutoutParameters._();
+  CutoutParameters createEmptyInstance() => create();
+  static $pb.PbList<CutoutParameters> createRepeated() => $pb.PbList<CutoutParameters>();
+  @$core.pragma('dart2js:noInline')
+  static CutoutParameters getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CutoutParameters>(create);
+  static CutoutParameters? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<CutoutParameters> get cutouts => $_getList(0);
+
+  @$pb.TagNumber(2)
+  $core.int get count => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set count($core.int v) { $_setUnsignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCount() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCount() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get gray => $_getN(2);
+  @$pb.TagNumber(3)
+  set gray($core.double v) { $_setFloat(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasGray() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearGray() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get blur => $_getN(3);
+  @$pb.TagNumber(4)
+  set blur($core.double v) { $_setFloat(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasBlur() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBlur() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.double get sizePower => $_getN(4);
+  @$pb.TagNumber(5)
+  set sizePower($core.double v) { $_setFloat(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasSizePower() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSizePower() => clearField(5);
+}
+
+class GuidanceInstanceParameters extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GuidanceInstanceParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..pc<Model>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'models', $pb.PbFieldType.PM, subBuilder: Model.create)
+    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'guidanceStrength', $pb.PbFieldType.OF)
+    ..pc<ScheduleParameters>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'schedule', $pb.PbFieldType.PM, subBuilder: ScheduleParameters.create)
+    ..aOM<CutoutParameters>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cutouts', subBuilder: CutoutParameters.create)
+    ..aOM<Prompt>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'prompt', subBuilder: Prompt.create)
+    ..hasRequiredFields = false
+  ;
+
+  GuidanceInstanceParameters._() : super();
+  factory GuidanceInstanceParameters({
+    $core.Iterable<Model>? models,
+    $core.double? guidanceStrength,
+    $core.Iterable<ScheduleParameters>? schedule,
+    CutoutParameters? cutouts,
+    Prompt? prompt,
+  }) {
+    final _result = create();
+    if (models != null) {
+      _result.models.addAll(models);
+    }
+    if (guidanceStrength != null) {
+      _result.guidanceStrength = guidanceStrength;
+    }
+    if (schedule != null) {
+      _result.schedule.addAll(schedule);
+    }
+    if (cutouts != null) {
+      _result.cutouts = cutouts;
+    }
+    if (prompt != null) {
+      _result.prompt = prompt;
+    }
+    return _result;
+  }
+  factory GuidanceInstanceParameters.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GuidanceInstanceParameters.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  GuidanceInstanceParameters clone() => GuidanceInstanceParameters()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GuidanceInstanceParameters copyWith(void Function(GuidanceInstanceParameters) updates) => super.copyWith((message) => updates(message as GuidanceInstanceParameters)) as GuidanceInstanceParameters; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static GuidanceInstanceParameters create() => GuidanceInstanceParameters._();
+  GuidanceInstanceParameters createEmptyInstance() => create();
+  static $pb.PbList<GuidanceInstanceParameters> createRepeated() => $pb.PbList<GuidanceInstanceParameters>();
+  @$core.pragma('dart2js:noInline')
+  static GuidanceInstanceParameters getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GuidanceInstanceParameters>(create);
+  static GuidanceInstanceParameters? _defaultInstance;
+
+  @$pb.TagNumber(2)
+  $core.List<Model> get models => $_getList(0);
+
+  @$pb.TagNumber(3)
+  $core.double get guidanceStrength => $_getN(1);
+  @$pb.TagNumber(3)
+  set guidanceStrength($core.double v) { $_setFloat(1, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasGuidanceStrength() => $_has(1);
+  @$pb.TagNumber(3)
+  void clearGuidanceStrength() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.List<ScheduleParameters> get schedule => $_getList(2);
+
+  @$pb.TagNumber(5)
+  CutoutParameters get cutouts => $_getN(3);
+  @$pb.TagNumber(5)
+  set cutouts(CutoutParameters v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasCutouts() => $_has(3);
+  @$pb.TagNumber(5)
+  void clearCutouts() => clearField(5);
+  @$pb.TagNumber(5)
+  CutoutParameters ensureCutouts() => $_ensure(3);
+
+  @$pb.TagNumber(6)
+  Prompt get prompt => $_getN(4);
+  @$pb.TagNumber(6)
+  set prompt(Prompt v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasPrompt() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearPrompt() => clearField(6);
+  @$pb.TagNumber(6)
+  Prompt ensurePrompt() => $_ensure(4);
+}
+
+class GuidanceParameters extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GuidanceParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..e<GuidancePreset>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'guidancePreset', $pb.PbFieldType.OE, defaultOrMaker: GuidancePreset.GUIDANCE_PRESET_NONE, valueOf: GuidancePreset.valueOf, enumValues: GuidancePreset.values)
+    ..pc<GuidanceInstanceParameters>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'instances', $pb.PbFieldType.PM, subBuilder: GuidanceInstanceParameters.create)
+    ..hasRequiredFields = false
+  ;
+
+  GuidanceParameters._() : super();
+  factory GuidanceParameters({
+    GuidancePreset? guidancePreset,
+    $core.Iterable<GuidanceInstanceParameters>? instances,
+  }) {
+    final _result = create();
+    if (guidancePreset != null) {
+      _result.guidancePreset = guidancePreset;
+    }
+    if (instances != null) {
+      _result.instances.addAll(instances);
+    }
+    return _result;
+  }
+  factory GuidanceParameters.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory GuidanceParameters.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  GuidanceParameters clone() => GuidanceParameters()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  GuidanceParameters copyWith(void Function(GuidanceParameters) updates) => super.copyWith((message) => updates(message as GuidanceParameters)) as GuidanceParameters; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static GuidanceParameters create() => GuidanceParameters._();
+  GuidanceParameters createEmptyInstance() => create();
+  static $pb.PbList<GuidanceParameters> createRepeated() => $pb.PbList<GuidanceParameters>();
+  @$core.pragma('dart2js:noInline')
+  static GuidanceParameters getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GuidanceParameters>(create);
+  static GuidanceParameters? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  GuidancePreset get guidancePreset => $_getN(0);
+  @$pb.TagNumber(1)
+  set guidancePreset(GuidancePreset v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasGuidancePreset() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGuidancePreset() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.List<GuidanceInstanceParameters> get instances => $_getList(1);
 }
 
 enum TransformType_Type {
@@ -1081,6 +1762,153 @@ class TransformType extends $pb.GeneratedMessage {
   void clearUpscaler() => clearField(2);
 }
 
+enum ExtendedParameter_Value {
+  float, 
+  int_3, 
+  str, 
+  notSet
+}
+
+class ExtendedParameter extends $pb.GeneratedMessage {
+  static const $core.Map<$core.int, ExtendedParameter_Value> _ExtendedParameter_ValueByTag = {
+    2 : ExtendedParameter_Value.float,
+    3 : ExtendedParameter_Value.int_3,
+    4 : ExtendedParameter_Value.str,
+    0 : ExtendedParameter_Value.notSet
+  };
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ExtendedParameter', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..oo(0, [2, 3, 4])
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
+    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'float', $pb.PbFieldType.OF)
+    ..a<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'int', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'str')
+    ..hasRequiredFields = false
+  ;
+
+  ExtendedParameter._() : super();
+  factory ExtendedParameter({
+    $core.String? name,
+    $core.double? float,
+    $fixnum.Int64? int_3,
+    $core.String? str,
+  }) {
+    final _result = create();
+    if (name != null) {
+      _result.name = name;
+    }
+    if (float != null) {
+      _result.float = float;
+    }
+    if (int_3 != null) {
+      _result.int_3 = int_3;
+    }
+    if (str != null) {
+      _result.str = str;
+    }
+    return _result;
+  }
+  factory ExtendedParameter.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ExtendedParameter.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ExtendedParameter clone() => ExtendedParameter()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ExtendedParameter copyWith(void Function(ExtendedParameter) updates) => super.copyWith((message) => updates(message as ExtendedParameter)) as ExtendedParameter; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ExtendedParameter create() => ExtendedParameter._();
+  ExtendedParameter createEmptyInstance() => create();
+  static $pb.PbList<ExtendedParameter> createRepeated() => $pb.PbList<ExtendedParameter>();
+  @$core.pragma('dart2js:noInline')
+  static ExtendedParameter getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExtendedParameter>(create);
+  static ExtendedParameter? _defaultInstance;
+
+  ExtendedParameter_Value whichValue() => _ExtendedParameter_ValueByTag[$_whichOneof(0)]!;
+  void clearValue() => clearField($_whichOneof(0));
+
+  @$pb.TagNumber(1)
+  $core.String get name => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set name($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearName() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.double get float => $_getN(1);
+  @$pb.TagNumber(2)
+  set float($core.double v) { $_setFloat(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasFloat() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFloat() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get int_3 => $_getI64(2);
+  @$pb.TagNumber(3)
+  set int_3($fixnum.Int64 v) { $_setInt64(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasInt_3() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearInt_3() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get str => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set str($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasStr() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStr() => clearField(4);
+}
+
+class ExtendedParameters extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ExtendedParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..pc<ExtendedParameter>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'parameters', $pb.PbFieldType.PM, subBuilder: ExtendedParameter.create)
+    ..hasRequiredFields = false
+  ;
+
+  ExtendedParameters._() : super();
+  factory ExtendedParameters({
+    $core.Iterable<ExtendedParameter>? parameters,
+  }) {
+    final _result = create();
+    if (parameters != null) {
+      _result.parameters.addAll(parameters);
+    }
+    return _result;
+  }
+  factory ExtendedParameters.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ExtendedParameters.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ExtendedParameters clone() => ExtendedParameters()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ExtendedParameters copyWith(void Function(ExtendedParameters) updates) => super.copyWith((message) => updates(message as ExtendedParameters)) as ExtendedParameters; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ExtendedParameters create() => ExtendedParameters._();
+  ExtendedParameters createEmptyInstance() => create();
+  static $pb.PbList<ExtendedParameters> createRepeated() => $pb.PbList<ExtendedParameters>();
+  @$core.pragma('dart2js:noInline')
+  static ExtendedParameters getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ExtendedParameters>(create);
+  static ExtendedParameters? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<ExtendedParameter> get parameters => $_getList(0);
+}
+
 class ImageParameters extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'height', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
@@ -1090,6 +1918,7 @@ class ImageParameters extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'steps', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOM<TransformType>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'transform', subBuilder: TransformType.create)
     ..pc<StepParameter>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'parameters', $pb.PbFieldType.PM, subBuilder: StepParameter.create)
+    ..aOM<ExtendedParameters>(500, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'extension', subBuilder: ExtendedParameters.create)
     ..hasRequiredFields = false
   ;
 
@@ -1102,6 +1931,7 @@ class ImageParameters extends $pb.GeneratedMessage {
     $fixnum.Int64? steps,
     TransformType? transform,
     $core.Iterable<StepParameter>? parameters,
+    ExtendedParameters? extension_500,
   }) {
     final _result = create();
     if (height != null) {
@@ -1124,6 +1954,9 @@ class ImageParameters extends $pb.GeneratedMessage {
     }
     if (parameters != null) {
       _result.parameters.addAll(parameters);
+    }
+    if (extension_500 != null) {
+      _result.extension_500 = extension_500;
     }
     return _result;
   }
@@ -1200,6 +2033,17 @@ class ImageParameters extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(7)
   $core.List<StepParameter> get parameters => $_getList(6);
+
+  @$pb.TagNumber(500)
+  ExtendedParameters get extension_500 => $_getN(7);
+  @$pb.TagNumber(500)
+  set extension_500(ExtendedParameters v) { setField(500, v); }
+  @$pb.TagNumber(500)
+  $core.bool hasExtension_500() => $_has(7);
+  @$pb.TagNumber(500)
+  void clearExtension_500() => clearField(500);
+  @$pb.TagNumber(500)
+  ExtendedParameters ensureExtension_500() => $_ensure(7);
 }
 
 class ClassifierConcept extends $pb.GeneratedMessage {
@@ -1423,9 +2267,273 @@ class ClassifierParameters extends $pb.GeneratedMessage {
   void clearRealizedAction() => clearField(3);
 }
 
+class AssetParameters extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AssetParameters', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..e<AssetAction>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'action', $pb.PbFieldType.OE, defaultOrMaker: AssetAction.ASSET_PUT, valueOf: AssetAction.valueOf, enumValues: AssetAction.values)
+    ..a<$fixnum.Int64>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'project', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false
+  ;
+
+  AssetParameters._() : super();
+  factory AssetParameters({
+    AssetAction? action,
+    $fixnum.Int64? project,
+  }) {
+    final _result = create();
+    if (action != null) {
+      _result.action = action;
+    }
+    if (project != null) {
+      _result.project = project;
+    }
+    return _result;
+  }
+  factory AssetParameters.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AssetParameters.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AssetParameters clone() => AssetParameters()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AssetParameters copyWith(void Function(AssetParameters) updates) => super.copyWith((message) => updates(message as AssetParameters)) as AssetParameters; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AssetParameters create() => AssetParameters._();
+  AssetParameters createEmptyInstance() => create();
+  static $pb.PbList<AssetParameters> createRepeated() => $pb.PbList<AssetParameters>();
+  @$core.pragma('dart2js:noInline')
+  static AssetParameters getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AssetParameters>(create);
+  static AssetParameters? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  AssetAction get action => $_getN(0);
+  @$pb.TagNumber(1)
+  set action(AssetAction v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasAction() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAction() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get project => $_getI64(1);
+  @$pb.TagNumber(2)
+  set project($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasProject() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearProject() => clearField(2);
+}
+
+class AnswerMeta extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AnswerMeta', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gpuId')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cpuId')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'nodeId')
+    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'engineId')
+    ..hasRequiredFields = false
+  ;
+
+  AnswerMeta._() : super();
+  factory AnswerMeta({
+    $core.String? gpuId,
+    $core.String? cpuId,
+    $core.String? nodeId,
+    $core.String? engineId,
+  }) {
+    final _result = create();
+    if (gpuId != null) {
+      _result.gpuId = gpuId;
+    }
+    if (cpuId != null) {
+      _result.cpuId = cpuId;
+    }
+    if (nodeId != null) {
+      _result.nodeId = nodeId;
+    }
+    if (engineId != null) {
+      _result.engineId = engineId;
+    }
+    return _result;
+  }
+  factory AnswerMeta.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AnswerMeta.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AnswerMeta clone() => AnswerMeta()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AnswerMeta copyWith(void Function(AnswerMeta) updates) => super.copyWith((message) => updates(message as AnswerMeta)) as AnswerMeta; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AnswerMeta create() => AnswerMeta._();
+  AnswerMeta createEmptyInstance() => create();
+  static $pb.PbList<AnswerMeta> createRepeated() => $pb.PbList<AnswerMeta>();
+  @$core.pragma('dart2js:noInline')
+  static AnswerMeta getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AnswerMeta>(create);
+  static AnswerMeta? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get gpuId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set gpuId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasGpuId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearGpuId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get cpuId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set cpuId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCpuId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCpuId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get nodeId => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set nodeId($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasNodeId() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNodeId() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get engineId => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set engineId($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasEngineId() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEngineId() => clearField(4);
+}
+
+class Answer extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Answer', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'answerId')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
+    ..a<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'received', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'created', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..aOM<AnswerMeta>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'meta', subBuilder: AnswerMeta.create)
+    ..pc<Artifact>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'artifacts', $pb.PbFieldType.PM, subBuilder: Artifact.create)
+    ..hasRequiredFields = false
+  ;
+
+  Answer._() : super();
+  factory Answer({
+    $core.String? answerId,
+    $core.String? requestId,
+    $fixnum.Int64? received,
+    $fixnum.Int64? created,
+    AnswerMeta? meta,
+    $core.Iterable<Artifact>? artifacts,
+  }) {
+    final _result = create();
+    if (answerId != null) {
+      _result.answerId = answerId;
+    }
+    if (requestId != null) {
+      _result.requestId = requestId;
+    }
+    if (received != null) {
+      _result.received = received;
+    }
+    if (created != null) {
+      _result.created = created;
+    }
+    if (meta != null) {
+      _result.meta = meta;
+    }
+    if (artifacts != null) {
+      _result.artifacts.addAll(artifacts);
+    }
+    return _result;
+  }
+  factory Answer.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Answer.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Answer clone() => Answer()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Answer copyWith(void Function(Answer) updates) => super.copyWith((message) => updates(message as Answer)) as Answer; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Answer create() => Answer._();
+  Answer createEmptyInstance() => create();
+  static $pb.PbList<Answer> createRepeated() => $pb.PbList<Answer>();
+  @$core.pragma('dart2js:noInline')
+  static Answer getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Answer>(create);
+  static Answer? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get answerId => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set answerId($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasAnswerId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAnswerId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get requestId => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set requestId($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasRequestId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRequestId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get received => $_getI64(2);
+  @$pb.TagNumber(3)
+  set received($fixnum.Int64 v) { $_setInt64(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasReceived() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearReceived() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get created => $_getI64(3);
+  @$pb.TagNumber(4)
+  set created($fixnum.Int64 v) { $_setInt64(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasCreated() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCreated() => clearField(4);
+
+  @$pb.TagNumber(6)
+  AnswerMeta get meta => $_getN(4);
+  @$pb.TagNumber(6)
+  set meta(AnswerMeta v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasMeta() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearMeta() => clearField(6);
+  @$pb.TagNumber(6)
+  AnswerMeta ensureMeta() => $_ensure(4);
+
+  @$pb.TagNumber(7)
+  $core.List<Artifact> get artifacts => $_getList(5);
+}
+
 enum Request_Params {
   image, 
   classifier, 
+  asset, 
   notSet
 }
 
@@ -1433,10 +2541,11 @@ class Request extends $pb.GeneratedMessage {
   static const $core.Map<$core.int, Request_Params> _Request_ParamsByTag = {
     5 : Request_Params.image,
     7 : Request_Params.classifier,
+    8 : Request_Params.asset,
     0 : Request_Params.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Request', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
-    ..oo(0, [5, 7])
+    ..oo(0, [5, 7, 8])
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'engineId')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestId')
     ..e<ArtifactType>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestedType', $pb.PbFieldType.OE, defaultOrMaker: ArtifactType.ARTIFACT_NONE, valueOf: ArtifactType.valueOf, enumValues: ArtifactType.values)
@@ -1444,6 +2553,8 @@ class Request extends $pb.GeneratedMessage {
     ..aOM<ImageParameters>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'image', subBuilder: ImageParameters.create)
     ..aOM<ConditionerParameters>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'conditioner', subBuilder: ConditionerParameters.create)
     ..aOM<ClassifierParameters>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'classifier', subBuilder: ClassifierParameters.create)
+    ..aOM<AssetParameters>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'asset', subBuilder: AssetParameters.create)
+    ..aOS(500, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'requestAgent')
     ..hasRequiredFields = false
   ;
 
@@ -1456,6 +2567,8 @@ class Request extends $pb.GeneratedMessage {
     ImageParameters? image,
     ConditionerParameters? conditioner,
     ClassifierParameters? classifier,
+    AssetParameters? asset,
+    $core.String? requestAgent,
   }) {
     final _result = create();
     if (engineId != null) {
@@ -1478,6 +2591,12 @@ class Request extends $pb.GeneratedMessage {
     }
     if (classifier != null) {
       _result.classifier = classifier;
+    }
+    if (asset != null) {
+      _result.asset = asset;
+    }
+    if (requestAgent != null) {
+      _result.requestAgent = requestAgent;
     }
     return _result;
   }
@@ -1567,6 +2686,26 @@ class Request extends $pb.GeneratedMessage {
   void clearClassifier() => clearField(7);
   @$pb.TagNumber(7)
   ClassifierParameters ensureClassifier() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  AssetParameters get asset => $_getN(7);
+  @$pb.TagNumber(8)
+  set asset(AssetParameters v) { setField(8, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasAsset() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearAsset() => clearField(8);
+  @$pb.TagNumber(8)
+  AssetParameters ensureAsset() => $_ensure(7);
+
+  @$pb.TagNumber(500)
+  $core.String get requestAgent => $_getSZ(8);
+  @$pb.TagNumber(500)
+  set requestAgent($core.String v) { $_setString(8, v); }
+  @$pb.TagNumber(500)
+  $core.bool hasRequestAgent() => $_has(8);
+  @$pb.TagNumber(500)
+  void clearRequestAgent() => clearField(500);
 }
 
 class OnStatus extends $pb.GeneratedMessage {
