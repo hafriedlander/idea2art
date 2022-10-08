@@ -467,12 +467,102 @@ class ImageAdjustment_Rescale extends $pb.GeneratedMessage {
   $core.List<$core.String> get algorithmHint => $_getList(3);
 }
 
+class ImageAdjustment_Crop extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Crop', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'top', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'left', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'width', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'height', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false
+  ;
+
+  ImageAdjustment_Crop._() : super();
+  factory ImageAdjustment_Crop({
+    $fixnum.Int64? top,
+    $fixnum.Int64? left,
+    $fixnum.Int64? width,
+    $fixnum.Int64? height,
+  }) {
+    final _result = create();
+    if (top != null) {
+      _result.top = top;
+    }
+    if (left != null) {
+      _result.left = left;
+    }
+    if (width != null) {
+      _result.width = width;
+    }
+    if (height != null) {
+      _result.height = height;
+    }
+    return _result;
+  }
+  factory ImageAdjustment_Crop.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory ImageAdjustment_Crop.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Crop clone() => ImageAdjustment_Crop()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  ImageAdjustment_Crop copyWith(void Function(ImageAdjustment_Crop) updates) => super.copyWith((message) => updates(message as ImageAdjustment_Crop)) as ImageAdjustment_Crop; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Crop create() => ImageAdjustment_Crop._();
+  ImageAdjustment_Crop createEmptyInstance() => create();
+  static $pb.PbList<ImageAdjustment_Crop> createRepeated() => $pb.PbList<ImageAdjustment_Crop>();
+  @$core.pragma('dart2js:noInline')
+  static ImageAdjustment_Crop getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ImageAdjustment_Crop>(create);
+  static ImageAdjustment_Crop? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get top => $_getI64(0);
+  @$pb.TagNumber(1)
+  set top($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasTop() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearTop() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get left => $_getI64(1);
+  @$pb.TagNumber(2)
+  set left($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasLeft() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearLeft() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $fixnum.Int64 get width => $_getI64(2);
+  @$pb.TagNumber(3)
+  set width($fixnum.Int64 v) { $_setInt64(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasWidth() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearWidth() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $fixnum.Int64 get height => $_getI64(3);
+  @$pb.TagNumber(4)
+  set height($fixnum.Int64 v) { $_setInt64(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasHeight() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearHeight() => clearField(4);
+}
+
 enum ImageAdjustment_Adjustment {
   blur, 
   invert, 
   levels, 
   channels, 
   rescale, 
+  crop, 
   notSet
 }
 
@@ -483,15 +573,17 @@ class ImageAdjustment extends $pb.GeneratedMessage {
     3 : ImageAdjustment_Adjustment.levels,
     4 : ImageAdjustment_Adjustment.channels,
     5 : ImageAdjustment_Adjustment.rescale,
+    6 : ImageAdjustment_Adjustment.crop,
     0 : ImageAdjustment_Adjustment.notSet
   };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5])
+    ..oo(0, [1, 2, 3, 4, 5, 6])
     ..aOM<ImageAdjustment_Gaussian>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'blur', subBuilder: ImageAdjustment_Gaussian.create)
     ..aOM<ImageAdjustment_Invert>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'invert', subBuilder: ImageAdjustment_Invert.create)
     ..aOM<ImageAdjustment_Levels>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'levels', subBuilder: ImageAdjustment_Levels.create)
     ..aOM<ImageAdjustment_Channels>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'channels', subBuilder: ImageAdjustment_Channels.create)
     ..aOM<ImageAdjustment_Rescale>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rescale', subBuilder: ImageAdjustment_Rescale.create)
+    ..aOM<ImageAdjustment_Crop>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'crop', subBuilder: ImageAdjustment_Crop.create)
     ..hasRequiredFields = false
   ;
 
@@ -502,6 +594,7 @@ class ImageAdjustment extends $pb.GeneratedMessage {
     ImageAdjustment_Levels? levels,
     ImageAdjustment_Channels? channels,
     ImageAdjustment_Rescale? rescale,
+    ImageAdjustment_Crop? crop,
   }) {
     final _result = create();
     if (blur != null) {
@@ -518,6 +611,9 @@ class ImageAdjustment extends $pb.GeneratedMessage {
     }
     if (rescale != null) {
       _result.rescale = rescale;
+    }
+    if (crop != null) {
+      _result.crop = crop;
     }
     return _result;
   }
@@ -599,6 +695,17 @@ class ImageAdjustment extends $pb.GeneratedMessage {
   void clearRescale() => clearField(5);
   @$pb.TagNumber(5)
   ImageAdjustment_Rescale ensureRescale() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  ImageAdjustment_Crop get crop => $_getN(5);
+  @$pb.TagNumber(6)
+  set crop(ImageAdjustment_Crop v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasCrop() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCrop() => clearField(6);
+  @$pb.TagNumber(6)
+  ImageAdjustment_Crop ensureCrop() => $_ensure(5);
 }
 
 enum Artifact_Data {

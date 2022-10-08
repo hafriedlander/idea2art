@@ -168,14 +168,13 @@ class ImageCanvasFrame {
 }
 
 enum ImageCanvasMode {
-  frame,
-  image,
-  mask,
-  draw,
+  create,
+  variants,
+  fill,
 }
 
 class ImageCanvasControls {
-  ImageCanvasControls({this.mode = ImageCanvasMode.frame});
+  ImageCanvasControls({this.mode = ImageCanvasMode.create});
 
   final ImageCanvasMode mode;
 

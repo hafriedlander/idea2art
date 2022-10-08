@@ -263,6 +263,19 @@ const ImageAdjustment_Rescale$json = const {
 
 /// Descriptor for `ImageAdjustment_Rescale`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List imageAdjustment_RescaleDescriptor = $convert.base64Decode('ChdJbWFnZUFkanVzdG1lbnRfUmVzY2FsZRIWCgZoZWlnaHQYASABKARSBmhlaWdodBIUCgV3aWR0aBgCIAEoBFIFd2lkdGgSKAoEbW9kZRgDIAEoDjIULmdvb3NlYWkuUmVzY2FsZU1vZGVSBG1vZGUSJQoOYWxnb3JpdGhtX2hpbnQYBCADKAlSDWFsZ29yaXRobUhpbnQ=');
+@$core.Deprecated('Use imageAdjustment_CropDescriptor instead')
+const ImageAdjustment_Crop$json = const {
+  '1': 'ImageAdjustment_Crop',
+  '2': const [
+    const {'1': 'top', '3': 1, '4': 1, '5': 4, '10': 'top'},
+    const {'1': 'left', '3': 2, '4': 1, '5': 4, '10': 'left'},
+    const {'1': 'width', '3': 3, '4': 1, '5': 4, '10': 'width'},
+    const {'1': 'height', '3': 4, '4': 1, '5': 4, '10': 'height'},
+  ],
+};
+
+/// Descriptor for `ImageAdjustment_Crop`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List imageAdjustment_CropDescriptor = $convert.base64Decode('ChRJbWFnZUFkanVzdG1lbnRfQ3JvcBIQCgN0b3AYASABKARSA3RvcBISCgRsZWZ0GAIgASgEUgRsZWZ0EhQKBXdpZHRoGAMgASgEUgV3aWR0aBIWCgZoZWlnaHQYBCABKARSBmhlaWdodA==');
 @$core.Deprecated('Use imageAdjustmentDescriptor instead')
 const ImageAdjustment$json = const {
   '1': 'ImageAdjustment',
@@ -272,6 +285,7 @@ const ImageAdjustment$json = const {
     const {'1': 'levels', '3': 3, '4': 1, '5': 11, '6': '.gooseai.ImageAdjustment_Levels', '9': 0, '10': 'levels'},
     const {'1': 'channels', '3': 4, '4': 1, '5': 11, '6': '.gooseai.ImageAdjustment_Channels', '9': 0, '10': 'channels'},
     const {'1': 'rescale', '3': 5, '4': 1, '5': 11, '6': '.gooseai.ImageAdjustment_Rescale', '9': 0, '10': 'rescale'},
+    const {'1': 'crop', '3': 6, '4': 1, '5': 11, '6': '.gooseai.ImageAdjustment_Crop', '9': 0, '10': 'crop'},
   ],
   '8': const [
     const {'1': 'adjustment'},
@@ -279,7 +293,7 @@ const ImageAdjustment$json = const {
 };
 
 /// Descriptor for `ImageAdjustment`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageAdjustmentDescriptor = $convert.base64Decode('Cg9JbWFnZUFkanVzdG1lbnQSNwoEYmx1chgBIAEoCzIhLmdvb3NlYWkuSW1hZ2VBZGp1c3RtZW50X0dhdXNzaWFuSABSBGJsdXISOQoGaW52ZXJ0GAIgASgLMh8uZ29vc2VhaS5JbWFnZUFkanVzdG1lbnRfSW52ZXJ0SABSBmludmVydBI5CgZsZXZlbHMYAyABKAsyHy5nb29zZWFpLkltYWdlQWRqdXN0bWVudF9MZXZlbHNIAFIGbGV2ZWxzEj8KCGNoYW5uZWxzGAQgASgLMiEuZ29vc2VhaS5JbWFnZUFkanVzdG1lbnRfQ2hhbm5lbHNIAFIIY2hhbm5lbHMSPAoHcmVzY2FsZRgFIAEoCzIgLmdvb3NlYWkuSW1hZ2VBZGp1c3RtZW50X1Jlc2NhbGVIAFIHcmVzY2FsZUIMCgphZGp1c3RtZW50');
+final $typed_data.Uint8List imageAdjustmentDescriptor = $convert.base64Decode('Cg9JbWFnZUFkanVzdG1lbnQSNwoEYmx1chgBIAEoCzIhLmdvb3NlYWkuSW1hZ2VBZGp1c3RtZW50X0dhdXNzaWFuSABSBGJsdXISOQoGaW52ZXJ0GAIgASgLMh8uZ29vc2VhaS5JbWFnZUFkanVzdG1lbnRfSW52ZXJ0SABSBmludmVydBI5CgZsZXZlbHMYAyABKAsyHy5nb29zZWFpLkltYWdlQWRqdXN0bWVudF9MZXZlbHNIAFIGbGV2ZWxzEj8KCGNoYW5uZWxzGAQgASgLMiEuZ29vc2VhaS5JbWFnZUFkanVzdG1lbnRfQ2hhbm5lbHNIAFIIY2hhbm5lbHMSPAoHcmVzY2FsZRgFIAEoCzIgLmdvb3NlYWkuSW1hZ2VBZGp1c3RtZW50X1Jlc2NhbGVIAFIHcmVzY2FsZRIzCgRjcm9wGAYgASgLMh0uZ29vc2VhaS5JbWFnZUFkanVzdG1lbnRfQ3JvcEgAUgRjcm9wQgwKCmFkanVzdG1lbnQ=');
 @$core.Deprecated('Use artifactDescriptor instead')
 const Artifact$json = const {
   '1': 'Artifact',

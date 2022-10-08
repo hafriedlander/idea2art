@@ -12,9 +12,11 @@ import 'package:idea2art/src/models/engine.dart';
 
 import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/models/server.dart';
+
 import 'package:idea2art/src/generated/dashboard.pbgrpc.dart';
 import 'package:idea2art/src/generated/engines.pbgrpc.dart' as eg;
 import 'package:idea2art/src/generated/generation.pbgrpc.dart';
+import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class GenerateServiceHostPortBadException implements Exception {
   String? message;
@@ -145,45 +147,90 @@ class GenerateService {
 
     promptList.add(Prompt(text: prompt.prompt));
 
-    final imagePng = prompt.imagePng;
-    if (imagePng != null) {
-      promptList.add(
-        Prompt(
-          artifact: Artifact(
-            binary: imagePng,
-            type: ArtifactType.ARTIFACT_IMAGE,
+    final crop = prompt.crop;
+
+    final maskLevelAdjustment = {
+      MaskShift.noShift: <ImageAdjustment>[],
+      MaskShift.towardsExposed: <ImageAdjustment>[
+        ImageAdjustment(
+          levels: ImageAdjustment_Levels(
+            inputLow: 0.5,
+            inputHigh: 1,
+            outputLow: 0,
+            outputHigh: 1,
           ),
         ),
+      ],
+      MaskShift.towardsProtected: <ImageAdjustment>[
+        ImageAdjustment(
+          levels: ImageAdjustment_Levels(
+            inputLow: 0,
+            inputHigh: 0.5,
+            outputLow: 0,
+            outputHigh: 1,
+          ),
+        ),
+      ],
+    }[prompt.maskShift];
+
+    final imagePng = prompt.imagePng;
+    if (imagePng != null) {
+      final imagePrompt = Prompt(
+        artifact: Artifact(
+          binary: imagePng,
+          type: ArtifactType.ARTIFACT_IMAGE,
+        ),
       );
+
+      if (crop != null) {
+        imagePrompt.artifact.adjustments.add(
+          ImageAdjustment(
+            crop: ImageAdjustment_Crop(
+              top: $fixnum.Int64(crop.top.toInt()),
+              left: $fixnum.Int64(crop.left.toInt()),
+              height: $fixnum.Int64(crop.height.toInt()),
+              width: $fixnum.Int64(crop.width.toInt()),
+            ),
+          ),
+        );
+      }
+
+      promptList.add(imagePrompt);
     }
 
     final maskPng = prompt.maskPng;
     if (maskPng != null) {
-      promptList.add(
-        Prompt(
-          artifact: Artifact(
-            binary: maskPng,
-            type: ArtifactType.ARTIFACT_MASK,
-            adjustments: [
-              ImageAdjustment(
-                channels: ImageAdjustment_Channels(
-                    r: ChannelSource.CHANNEL_A, a: ChannelSource.CHANNEL_ONE),
-              ),
-              ImageAdjustment(
-                blur: ImageAdjustment_Gaussian(sigma: 48),
-              ),
-              ImageAdjustment(
-                levels: ImageAdjustment_Levels(
-                  inputLow: 0,
-                  inputHigh: 0.5,
-                  outputLow: 0,
-                  outputHigh: 1,
-                ),
-              ),
-            ],
-          ),
+      final maskPrompt = Prompt(
+        artifact: Artifact(
+          binary: maskPng,
+          type: ArtifactType.ARTIFACT_MASK,
+          adjustments: [
+            ImageAdjustment(
+              channels: ImageAdjustment_Channels(
+                  r: ChannelSource.CHANNEL_A, a: ChannelSource.CHANNEL_ONE),
+            ),
+            ImageAdjustment(
+              blur: ImageAdjustment_Gaussian(sigma: 48),
+            ),
+            ...maskLevelAdjustment!
+          ],
         ),
       );
+
+      if (crop != null) {
+        maskPrompt.artifact.adjustments.add(
+          ImageAdjustment(
+            crop: ImageAdjustment_Crop(
+              top: $fixnum.Int64(crop.top.toInt()),
+              left: $fixnum.Int64(crop.left.toInt()),
+              height: $fixnum.Int64(crop.height.toInt()),
+              width: $fixnum.Int64(crop.width.toInt()),
+            ),
+          ),
+        );
+      }
+
+      promptList.add(maskPrompt);
     }
 
     final request = Request(

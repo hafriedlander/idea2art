@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:idea2art/src/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:idea2art/src/models/canvas.dart';
@@ -131,4 +133,54 @@ final imageCanvasFrameWithSizeProvider = Provider<ImageCanvasFrame>((ref) {
       height: settings.height.toDouble(),
     ),
   );
+});
+
+/// An extension on [Ref] with helpful methods to add a debounce.
+extension RefDebounceExtension on Ref {
+  /// Delays an execution by a bit such that if a dependency changes multiple
+  /// time rapidly, the rest of the code is only run once.
+  Future<void> debounce(Duration duration) {
+    final completer = Completer<void>();
+    final timer = Timer(duration, () {
+      if (!completer.isCompleted) completer.complete();
+    });
+    onDispose(() {
+      timer.cancel();
+      if (!completer.isCompleted) {
+        completer.completeError(StateError('Cancelled'));
+      }
+    });
+    return completer.future;
+  }
+}
+
+const imageCanvasFrameModeDebounce = Duration(milliseconds: 2);
+final imageCanvasFrameModeStopwatch = Stopwatch();
+
+final imageCanvasFrameModeProvider =
+    FutureProvider<ImageCanvasMode>((ref) async {
+  final frame = ref.watch(imageCanvasFrameWithSizeProvider);
+  final imageCanvas = ref.watch(imageCanvasProvider);
+
+  // This is potentially a fairly expensive operation, so debounce a little
+  await ref.debounce(imageCanvasFrameModeDebounce);
+
+  try {
+    imageCanvasFrameModeStopwatch.reset();
+    imageCanvasFrameModeStopwatch.start();
+    final res = await GenerationExecuter.testImageMode(frame.pos, imageCanvas);
+    imageCanvasFrameModeStopwatch.stop();
+
+    if (imageCanvasFrameModeStopwatch.elapsed >
+        imageCanvasFrameModeDebounce * 0.5) {
+      debugPrint(
+          "Warning - frame mode calculation took longer than half of debounce time, ${imageCanvasFrameModeStopwatch.elapsedMilliseconds}ms");
+    }
+
+    return res;
+  } catch (e) {
+    debugPrint("Ouch, ${e}");
+  }
+
+  return ImageCanvasMode.create;
 });

@@ -139,11 +139,16 @@ class GenerateButton extends ConsumerWidget {
     final settings = ref.watch(generateSettingsProvider);
     final engine = ref.watch(generateSettingsEngineProvider);
     final service = ref.watch(generateServiceProvider);
+    final frameMode = ref.watch(imageCanvasFrameModeProvider);
 
     final enabled =
         service.hasValue && prompt.prompt.isNotEmpty && engine != null;
 
-    debugPrint("${prompt.prompt} ${service.hasValue.toString()}");
+    final label = {
+      ImageCanvasMode.create: 'CREATE',
+      ImageCanvasMode.variants: 'VARIANTS',
+      ImageCanvasMode.fill: 'FILL',
+    }[frameMode.valueOrNull ?? ImageCanvasMode.create]!;
 
     return ElevatedButton(
       onPressed: enabled
@@ -151,7 +156,7 @@ class GenerateButton extends ConsumerWidget {
               GenerationExecuter.generateForNewImageset(ref);
             }
           : null,
-      child: const Text("Generate"),
+      child: Text(label),
     );
   }
 }

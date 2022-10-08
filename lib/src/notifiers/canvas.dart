@@ -128,7 +128,7 @@ class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
         if (set.key == imagesetkey) {
           return set.copyWith(
             pos: Rect.fromCenter(
-              center: center,
+              center: (center ~/ 1),
               width: set.pos.width,
               height: set.pos.height,
             ),
@@ -146,7 +146,7 @@ class ImageCanvasFrameNotifier extends StateNotifier<ImageCanvasFrame> {
   void setCenter(Offset center) {
     state = state.copyWith(
       pos: Rect.fromCenter(
-        center: center,
+        center: (center ~/ 1),
         width: state.pos.width,
         height: state.pos.height,
       ),

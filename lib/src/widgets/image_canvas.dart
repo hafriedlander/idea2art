@@ -256,12 +256,14 @@ class ImageCanvasImageSetThumbsWidget extends HookConsumerWidget {
 }
 
 class ImageCanvasFrameWidget extends ConsumerWidget {
+  final ImageCanvasMode mode;
   final double canvasScale;
   final Color borderColor;
   final double borderSize;
 
   const ImageCanvasFrameWidget({
     super.key,
+    this.mode = ImageCanvasMode.create,
     this.canvasScale = 1,
     this.borderColor = Colors.lightGreen,
     this.borderSize = 3.0,
@@ -273,48 +275,63 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
 
     final pos = ref.watch(imageCanvasFrameWithSizeProvider).pos;
 
+    final borderColor = {
+      ImageCanvasMode.create: Colors.lightGreen,
+      ImageCanvasMode.variants: Colors.yellow,
+      ImageCanvasMode.fill: Colors.red,
+    }[mode]!;
+
+    final label = {
+      ImageCanvasMode.create: 'CREATE',
+      ImageCanvasMode.variants: 'VARIANTS',
+      ImageCanvasMode.fill: 'FILL',
+    }[mode]!;
+
+    final icon = {
+      ImageCanvasMode.create: Icons.add_circle_outline,
+      ImageCanvasMode.variants: Icons.autorenew,
+      ImageCanvasMode.fill: Icons.all_out,
+    }[mode]!;
+
     return Positioned(
       left: pos.left - borderSize,
       top: pos.top - borderSize,
-      child: Container(
-        width: pos.width + borderSize * 2,
-        height: pos.height + borderSize * 2,
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: borderSize,
-            color: borderColor,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            right: 0,
+            top: -30,
+            child: Row(
+              children: [
+                Text(
+                  label,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(color: borderColor),
+                ),
+                Icon(
+                  icon,
+                  color: borderColor,
+                ),
+              ],
+            ),
           ),
-        ),
+          Container(
+            width: pos.width + borderSize * 2,
+            height: pos.height + borderSize * 2,
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: borderSize,
+                color: borderColor,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
-}
-
-enum HittableType { frame, image, thumbnail }
-
-class Hittable {
-  final HittableType type;
-  final Rect rect;
-
-  Hittable({required this.type, required this.rect});
-}
-
-class HittableImage extends Hittable {
-  final int imagesetkey;
-
-  HittableImage({
-    required this.imagesetkey,
-    required super.rect,
-    required super.type,
-  });
-
-  HittableImage.fromImageset({
-    required ImageCanvasImageSet imageset,
-  }) : this(
-          imagesetkey: imageset.key,
-          type: HittableType.image,
-          rect: imageset.pos,
-        );
 }
 
 class ImageCanvaHitTests {
@@ -345,7 +362,7 @@ class ImageCanvaHitTests {
     for (var rect in rects.reversed) {
       if (snapee.overlaps(rect.inflate(rectDistance))) {
         final hys = [rect.top, rect.centerLeft.dy, rect.bottom];
-        final sys = [snapee.top, snapee.bottom];
+        final sys = [snapee.top, snapee.centerLeft.dy, snapee.bottom];
 
         for (var hy in hys) {
           for (var sy in sys) {
@@ -356,7 +373,7 @@ class ImageCanvaHitTests {
         }
 
         final hxs = [rect.left, rect.topCenter.dx, rect.right];
-        final sxs = [snapee.left, snapee.right];
+        final sxs = [snapee.left, snapee.topCenter.dx, snapee.right];
 
         for (var hx in hxs) {
           for (var sx in sxs) {
@@ -391,11 +408,12 @@ class ImageCanvasWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final images = ref.watch(imageCanvasProvider);
     final frame = ref.watch(imageCanvasFrameWithSizeProvider).pos;
+    final frameMode = ref.watch(imageCanvasFrameModeProvider);
 
     final canvasPos = useState<Offset>(Offset(0, 0));
     final canvasScale = useState<double>(1);
 
-    final panStart = useState<Offset?>(const Offset(0, 0));
+    final panStart = useState<Offset?>(null);
     final hitCanvas = useState<Offset>(const Offset(0, 0));
     final hitFrame = useState<Rect?>(null);
     final hitSet = useState<ImageCanvasImageSet?>(null);
@@ -529,6 +547,7 @@ class ImageCanvasWidget extends HookConsumerWidget {
                       children: [
                         ..._buildImages(images),
                         ImageCanvasFrameWidget(
+                          mode: frameMode.value ?? ImageCanvasMode.create,
                           canvasScale: canvasScale.value,
                         ),
                       ],

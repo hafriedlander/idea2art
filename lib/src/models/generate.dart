@@ -1,25 +1,39 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart';
+
+enum MaskShift {
+  towardsProtected,
+  towardsExposed,
+  noShift,
+}
 
 class GeneratePrompt {
   final String prompt;
   final List<int>? imagePng;
   final List<int>? maskPng;
+  final Rect? crop;
+  final MaskShift maskShift;
 
-  const GeneratePrompt({
-    this.prompt = "",
-    this.imagePng,
-    this.maskPng,
-  });
+  const GeneratePrompt(
+      {this.prompt = "",
+      this.imagePng,
+      this.maskPng,
+      this.crop,
+      this.maskShift = MaskShift.noShift});
 
   GeneratePrompt copyWith({
     String? prompt,
     List<int>? imagePng,
     List<int>? maskPng,
+    Rect? crop,
+    MaskShift? maskShift,
   }) {
     return GeneratePrompt(
       prompt: prompt ?? this.prompt,
       imagePng: imagePng ?? this.imagePng,
       maskPng: maskPng ?? this.maskPng,
+      crop: crop ?? this.crop,
+      maskShift: maskShift ?? this.maskShift,
     );
   }
 }
