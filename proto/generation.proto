@@ -33,8 +33,15 @@ message Tokens {
   optional string tokenizer_id = 2;
 }
 
+enum GaussianDirection {
+  DIRECTION_NONE = 0;
+  DIRECTION_UP = 1;
+  DIRECTION_DOWN = 2;
+}
+
 message ImageAdjustment_Gaussian {
   float sigma = 1;
+  GaussianDirection direction = 2;
 }
 
 message ImageAdjustment_Invert{

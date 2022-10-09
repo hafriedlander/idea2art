@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:idea2art/src/models/canvas.dart';
@@ -138,6 +139,50 @@ class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
       }).toList(),
     );
   }
+
+  void addMaskToAll(ImageCanvasMaskStroke mask) {
+    state = state.copyWith(
+        imagesets: state.imagesets.map<ImageCanvasImageSet>((set) {
+      final image = set.selectedImage();
+      if (image == null) return set;
+
+      return set.copyWith(
+        images: set.images
+            .map((image) => image.copyWith(
+                  image: image.image,
+                  maskstrokes: [
+                    ...image.maskstrokes,
+                    mask.copyWith(
+                      points:
+                          mask.points.map((point) => point - set.pos.topLeft),
+                    ),
+                  ],
+                ))
+            .toList(),
+      );
+    }).toList());
+  }
+
+  void setBuildingMask(ImageCanvasMaskStroke buildingMask) {
+    state = state.copyWith(buildingMask: buildingMask);
+  }
+
+  void addPointToBuildingMask(Offset point) {
+    state = state.copyWith(
+      buildingMask: state.buildingMask.copyWith(
+        points: [
+          ...state.buildingMask.points,
+          point,
+        ],
+      ),
+    );
+  }
+}
+
+extension ListMixin<T> on List<T> {
+  List<T> allExceptLast() {
+    return sublist(0, length - 1);
+  }
 }
 
 class ImageCanvasFrameNotifier extends StateNotifier<ImageCanvasFrame> {
@@ -159,5 +204,9 @@ class ImageCanvasControlsNotifier extends StateNotifier<ImageCanvasControls> {
 
   void setMode(ImageCanvasMode mode) {
     state = state.copyWith(mode: mode);
+  }
+
+  void setMaskRadius(double radius) {
+    state = state.copyWith(maskRadius: radius);
   }
 }

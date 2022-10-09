@@ -57,6 +57,23 @@ class ArtifactType extends $pb.ProtobufEnum {
   const ArtifactType._($core.int v, $core.String n) : super(v, n);
 }
 
+class GaussianDirection extends $pb.ProtobufEnum {
+  static const GaussianDirection DIRECTION_NONE = GaussianDirection._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DIRECTION_NONE');
+  static const GaussianDirection DIRECTION_UP = GaussianDirection._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DIRECTION_UP');
+  static const GaussianDirection DIRECTION_DOWN = GaussianDirection._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DIRECTION_DOWN');
+
+  static const $core.List<GaussianDirection> values = <GaussianDirection> [
+    DIRECTION_NONE,
+    DIRECTION_UP,
+    DIRECTION_DOWN,
+  ];
+
+  static final $core.Map<$core.int, GaussianDirection> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static GaussianDirection? valueOf($core.int value) => _byValue[value];
+
+  const GaussianDirection._($core.int v, $core.String n) : super(v, n);
+}
+
 class ChannelSource extends $pb.ProtobufEnum {
   static const ChannelSource CHANNEL_R = ChannelSource._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_R');
   static const ChannelSource CHANNEL_G = ChannelSource._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CHANNEL_G');

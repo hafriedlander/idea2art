@@ -15,7 +15,7 @@ class GeneratePrompt {
   final MaskShift maskShift;
 
   const GeneratePrompt(
-      {this.prompt = "",
+      {this.prompt = "A Teddybear",
       this.imagePng,
       this.maskPng,
       this.crop,

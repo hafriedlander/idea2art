@@ -155,11 +155,14 @@ class GenerationExecuter {
         ImageCanvasImage? selected = imageset.selectedImage();
         if (selected == null) continue;
 
-        canvas.drawImage(
-          selected.image,
-          imageset.pos.topLeft - area.topLeft,
-          paint,
-        );
+        canvas.saveLayer(null, paint);
+
+        final translate = imageset.pos.topLeft - area.topLeft;
+        canvas.translate(translate.dx, translate.dy);
+
+        selected.drawToCanvas(canvas);
+
+        canvas.restore();
 
         if (callback != null) callback(canvas);
       }
@@ -200,7 +203,7 @@ class GenerationExecuter {
 
       if (overlaps.isNotEmpty) {
         final paintSrc = Paint();
-        paintSrc.blendMode = BlendMode.src;
+        paintSrc.blendMode = BlendMode.srcOver;
 
         // Step 1 - build image
 
@@ -280,11 +283,13 @@ class GenerationExecuter {
     ref.read(imageCanvasProvider.notifier).add(set);
     ref.read(imageCanvasProvider.notifier).selectByImageset(set);
 
-    if (false) {
+    if (true) {
       if (image != null)
         ref.read(imageCanvasProvider.notifier).addUIImageToSet(
             set.key, await decodeImageFromList(Uint8List.view(image.buffer)));
+    }
 
+    if (false) {
       if (mask != null)
         ref.read(imageCanvasProvider.notifier).addUIImageToSet(
             set.key, await decodeImageFromList(Uint8List.view(mask.buffer)));

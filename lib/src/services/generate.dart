@@ -214,6 +214,7 @@ class GenerateService {
 
     final crop = prompt.crop;
 
+    /*
     final maskLevelAdjustment = {
       MaskShift.noShift: <ImageAdjustment>[],
       MaskShift.towardsExposed: <ImageAdjustment>[
@@ -237,6 +238,7 @@ class GenerateService {
         ),
       ],
     }[prompt.maskShift];
+  */
 
     final imagePng = prompt.imagePng;
     if (imagePng != null) {
@@ -275,9 +277,16 @@ class GenerateService {
                   r: ChannelSource.CHANNEL_A, a: ChannelSource.CHANNEL_ONE),
             ),
             ImageAdjustment(
-              blur: ImageAdjustment_Gaussian(sigma: 48),
+              blur: ImageAdjustment_Gaussian(
+                sigma: 32,
+                direction: prompt.maskShift == MaskShift.noShift
+                    ? GaussianDirection.DIRECTION_NONE
+                    : prompt.maskShift == MaskShift.towardsProtected
+                        ? GaussianDirection.DIRECTION_UP
+                        : GaussianDirection.DIRECTION_DOWN,
+              ),
             ),
-            ...maskLevelAdjustment!
+            //...maskLevelAdjustment!
           ],
         ),
       );

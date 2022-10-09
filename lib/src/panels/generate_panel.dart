@@ -67,9 +67,8 @@ class GeneratePromptField extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _controller = useTextEditingController(text: "An image");
-
     final prompt = ref.watch(generatePromptProvider);
+    final _controller = useTextEditingController(text: prompt.prompt);
 
     return TextField(
       controller: _controller,
@@ -123,7 +122,9 @@ class GenerateButton extends ConsumerWidget {
       ImageCanvasMode.create: 'CREATE',
       ImageCanvasMode.variants: 'VARIANTS',
       ImageCanvasMode.fill: 'FILL',
-    }[controls.valueOrNull?.mode ?? ImageCanvasMode.create]!;
+    }[controls.valueOrNull?.mode ?? ImageCanvasMode.create];
+
+    if (label == null) return Container();
 
     return ElevatedButton(
       onPressed: available

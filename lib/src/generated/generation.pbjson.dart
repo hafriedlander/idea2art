@@ -39,6 +39,18 @@ const ArtifactType$json = const {
 
 /// Descriptor for `ArtifactType`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List artifactTypeDescriptor = $convert.base64Decode('CgxBcnRpZmFjdFR5cGUSEQoNQVJUSUZBQ1RfTk9ORRAAEhIKDkFSVElGQUNUX0lNQUdFEAESEgoOQVJUSUZBQ1RfVklERU8QAhIRCg1BUlRJRkFDVF9URVhUEAMSEwoPQVJUSUZBQ1RfVE9LRU5TEAQSFgoSQVJUSUZBQ1RfRU1CRURESU5HEAUSHAoYQVJUSUZBQ1RfQ0xBU1NJRklDQVRJT05TEAYSEQoNQVJUSUZBQ1RfTUFTSxAH');
+@$core.Deprecated('Use gaussianDirectionDescriptor instead')
+const GaussianDirection$json = const {
+  '1': 'GaussianDirection',
+  '2': const [
+    const {'1': 'DIRECTION_NONE', '2': 0},
+    const {'1': 'DIRECTION_UP', '2': 1},
+    const {'1': 'DIRECTION_DOWN', '2': 2},
+  ],
+};
+
+/// Descriptor for `GaussianDirection`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List gaussianDirectionDescriptor = $convert.base64Decode('ChFHYXVzc2lhbkRpcmVjdGlvbhISCg5ESVJFQ1RJT05fTk9ORRAAEhAKDERJUkVDVElPTl9VUBABEhIKDkRJUkVDVElPTl9ET1dOEAI=');
 @$core.Deprecated('Use channelSourceDescriptor instead')
 const ChannelSource$json = const {
   '1': 'ChannelSource',
@@ -206,11 +218,12 @@ const ImageAdjustment_Gaussian$json = const {
   '1': 'ImageAdjustment_Gaussian',
   '2': const [
     const {'1': 'sigma', '3': 1, '4': 1, '5': 2, '10': 'sigma'},
+    const {'1': 'direction', '3': 2, '4': 1, '5': 14, '6': '.gooseai.GaussianDirection', '10': 'direction'},
   ],
 };
 
 /// Descriptor for `ImageAdjustment_Gaussian`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List imageAdjustment_GaussianDescriptor = $convert.base64Decode('ChhJbWFnZUFkanVzdG1lbnRfR2F1c3NpYW4SFAoFc2lnbWEYASABKAJSBXNpZ21h');
+final $typed_data.Uint8List imageAdjustment_GaussianDescriptor = $convert.base64Decode('ChhJbWFnZUFkanVzdG1lbnRfR2F1c3NpYW4SFAoFc2lnbWEYASABKAJSBXNpZ21hEjgKCWRpcmVjdGlvbhgCIAEoDjIaLmdvb3NlYWkuR2F1c3NpYW5EaXJlY3Rpb25SCWRpcmVjdGlvbg==');
 @$core.Deprecated('Use imageAdjustment_InvertDescriptor instead')
 const ImageAdjustment_Invert$json = const {
   '1': 'ImageAdjustment_Invert',

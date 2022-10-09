@@ -18,47 +18,47 @@ import 'package:idea2art/src/utils.dart';
 class ImageCanvasImagePainter extends CustomPainter {
   ImageCanvasImagePainter({
     required this.image,
+    this.extraMask = const ImageCanvasMaskStroke(),
     required this.w,
     required this.h,
   });
 
   final ImageCanvasImage image;
+  final ImageCanvasMaskStroke extraMask;
   final double w;
   final double h;
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawImageRect(
-        image.image,
-        Rect.fromLTWH(
-          0,
-          0,
-          image.image.width.toDouble(),
-          image.image.height.toDouble(),
-        ),
-        Rect.fromLTWH(
-          0,
-          0,
-          w,
-          h,
-        ),
-        Paint());
+    debugPrint("${image.maskstrokes.length} ${w}");
+
+    final scale = w / image.image.width.toDouble();
+
+    canvas.saveLayer(null, Paint());
+
+    canvas.scale(scale);
+
+    image.drawToCanvas(canvas, extraMask: extraMask);
+
+    canvas.restore();
   }
 
   @override
   bool shouldRepaint(ImageCanvasImagePainter oldDelegate) =>
-      image.key != oldDelegate.image.key;
+      image != oldDelegate.image || extraMask != oldDelegate.extraMask;
 }
 
 class ImageCanvasImageWidget extends HookConsumerWidget {
   const ImageCanvasImageWidget({
     super.key,
     required this.image,
+    this.extraMask = const ImageCanvasMaskStroke(),
     this.width = -1,
   });
 
   final ImageCanvasImage image;
   final int width;
+  final ImageCanvasMaskStroke extraMask;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,9 +70,14 @@ class ImageCanvasImageWidget extends HookConsumerWidget {
     return SizedBox(
       width: w.toDouble(),
       height: w.toDouble(),
-      child: CustomPaint(
-        painter: ImageCanvasImagePainter(
-            image: image, w: w.toDouble(), h: h.toDouble()),
+      child: ClipRect(
+        child: CustomPaint(
+          painter: ImageCanvasImagePainter(
+              image: image,
+              extraMask: extraMask,
+              w: w.toDouble(),
+              h: h.toDouble()),
+        ),
       ),
     );
   }
@@ -80,8 +85,12 @@ class ImageCanvasImageWidget extends HookConsumerWidget {
 
 class ImageCanvasImageSetWidget extends HookConsumerWidget {
   final ImageCanvasImageSet imageset;
+  final ImageCanvasMaskStroke extraMask;
 
-  ImageCanvasImageSetWidget({required this.imageset});
+  ImageCanvasImageSetWidget({
+    required this.imageset,
+    this.extraMask = const ImageCanvasMaskStroke(),
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,9 +102,7 @@ class ImageCanvasImageSetWidget extends HookConsumerWidget {
         color: Colors.grey.shade700,
       );
     } else {
-      return ImageCanvasImageWidget(
-        image: selected,
-      );
+      return ImageCanvasImageWidget(image: selected, extraMask: extraMask);
     }
   }
 }
@@ -185,7 +192,7 @@ class ImageCanvasImageSetThumbsWidget extends HookConsumerWidget {
 
     for (final image in imageset.images) {
       thumbs.add(
-        InkWell(
+        GestureDetector(
           onTap: () {
             ref
                 .read(imageCanvasProvider.notifier)
@@ -230,7 +237,6 @@ class ImageCanvasImageSetThumbsWidget extends HookConsumerWidget {
             child: ScrollConfiguration(
               behavior: ImageCanvasImageSetThumbsScrollBehavior(),
               child: ListView(
-                // This next line does the trick.
                 scrollDirection: Axis.horizontal,
                 children: _thumbs(ref),
               ),
@@ -280,6 +286,7 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
     final available = ref.watch(generateServiceAvailableProvider);
 
     final label = {
+      ImageCanvasMode.auto: 'AUTO',
       ImageCanvasMode.create: 'CREATE',
       ImageCanvasMode.variants: 'VARIANTS',
       ImageCanvasMode.fill: 'FILL',
@@ -288,6 +295,7 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
     if (label == null) return Container();
 
     var borderColor = {
+      ImageCanvasMode.auto: Colors.grey,
       ImageCanvasMode.create: Colors.lightGreen,
       ImageCanvasMode.variants: Colors.yellow,
       ImageCanvasMode.fill: Colors.red,
@@ -295,6 +303,7 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
         .withAlpha(available ? 255 : 96);
 
     final icon = {
+      ImageCanvasMode.auto: Idea2artIcons.auto,
       ImageCanvasMode.create: Idea2artIcons.create,
       ImageCanvasMode.variants: Idea2artIcons.variants,
       ImageCanvasMode.fill: Idea2artIcons.fill,
@@ -353,6 +362,13 @@ class ImageCanvaHitTests {
 
   ImageCanvasImageSet? imagesetHittest(Offset pos, {int excludeSetKey = -1}) {
     return imagesets.lastWhereOrNull((set) => set.pos.contains(pos));
+  }
+
+  Iterable<ImageCanvasImageSet> imagesetsHittest(
+    Offset pos, {
+    int excludeSetKey = -1,
+  }) {
+    return imagesets.where((set) => set.pos.contains(pos));
   }
 
   Offset snapTest(Rect snapee) {
@@ -464,7 +480,13 @@ class ImageCanvasToolWidget extends HookConsumerWidget {
           SizedBox(
             width: 200,
             height: 32,
-            child: Slider(value: 8, max: 32, onChanged: (val) {}),
+            child: Slider(
+              value: controls.maskRadius,
+              max: 32,
+              onChanged: (val) => ref
+                  .read(imageCanvasControlsProvider.notifier)
+                  .setMaskRadius(val),
+            ),
           ),
           buildButton(() => expanded.value = true, Idea2artIcons.mask,
               selected: true)
@@ -480,6 +502,173 @@ class ImageCanvasToolWidget extends HookConsumerWidget {
   }
 }
 
+class GenerationGestureHandler extends HookConsumerWidget {
+  final Widget child;
+  final Offset canvasPos;
+  final double canvasScale;
+  final void Function(Offset) canvasPanCallback;
+
+  const GenerationGestureHandler({
+    super.key,
+    required this.child,
+    required this.canvasPos,
+    required this.canvasScale,
+    required this.canvasPanCallback,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final images = ref.watch(imageCanvasProvider);
+    final frame = ref.watch(imageCanvasFrameWithSizeProvider).pos;
+
+    final panStart = useState<Offset?>(null);
+    final hitCanvas = useState<Offset>(const Offset(0, 0));
+    final hitFrame = useState<Rect?>(null);
+    final hitSet = useState<ImageCanvasImageSet?>(null);
+
+    Offset gesturePointToCanvas(Offset point, [Offset? canvas]) {
+      return (point -
+                  Offset(
+                    (context.size?.width ?? 0) / 2,
+                    (context.size?.height ?? 0) / 2,
+                  )) /
+              canvasScale -
+          (canvas ?? canvasPos);
+    }
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTapDown: (details) {},
+      onTapUp: (details) {
+        // If we tapped (without pan), treat it like a select / unselect
+        final hitpos = gesturePointToCanvas(details.localPosition);
+
+        final tester = ImageCanvaHitTests(frame, images.imagesets);
+        final hitSet = tester.imagesetHittest(hitpos);
+
+        if (hitSet == null) {
+          ref.read(imageCanvasProvider.notifier).unselect();
+        } else {
+          ref.read(imageCanvasProvider.notifier).select(hitSet.key);
+        }
+      },
+      onScaleStart: (details) {
+        // Remember original position of everything we hit and might pan
+        final hitpos = gesturePointToCanvas(details.localFocalPoint);
+        final tester = ImageCanvaHitTests(frame, images.imagesets);
+
+        panStart.value = hitpos;
+        hitFrame.value = tester.frameHittest(hitpos) ? frame : null;
+        hitSet.value = tester.imagesetHittest(hitpos);
+        hitCanvas.value = canvasPos;
+
+        // If we're going to move the hitSet (instead of hitFrame) select it too
+        if (hitFrame.value == null && hitSet.value != null) {
+          ref.read(imageCanvasProvider.notifier).select(hitSet.value!.key);
+        }
+      },
+      onScaleUpdate: (details) {
+        // Since we might be moving the canvas, use the remembered canvas details
+        final pos = gesturePointToCanvas(
+          details.localFocalPoint,
+          hitCanvas.value,
+        );
+
+        // We always move the panned item "original position" + "total delta from start"
+        final delta = pos - panStart.value!;
+
+        final hitFrameVal = hitFrame.value;
+        final hitSetVal = hitSet.value;
+
+        if (hitFrameVal != null) {
+          // Frame always has highest hit priority on pan
+          final tester = ImageCanvaHitTests(null, images.imagesets);
+
+          var newPos = hitFrameVal.shift(delta);
+          newPos = newPos.shift(tester.snapTest(newPos));
+
+          ref.read(imageCanvasFrameProvider.notifier).setCenter(newPos.center);
+        } else if (hitSetVal != null) {
+          // Imageset has next highest hit priority
+          final tester = ImageCanvaHitTests(
+            frame,
+            images.imagesets.where((set) => set.key != hitSetVal.key),
+          );
+
+          var newPos = hitSetVal.pos.shift(delta);
+          newPos = newPos.shift(tester.snapTest(newPos));
+
+          ref.read(imageCanvasProvider.notifier).setImageSetCenter(
+                hitSetVal.key,
+                newPos.center,
+              );
+        } else {
+          // And if we hit nothing, pan the canvas
+          canvasPanCallback(hitCanvas.value + delta);
+        }
+      },
+      onScaleEnd: (details) {
+        panStart.value = null;
+      },
+      child: child,
+    );
+  }
+}
+
+class PaintGestureHandler extends HookConsumerWidget {
+  final Widget child;
+  final Offset canvasPos;
+  final double canvasScale;
+
+  const PaintGestureHandler({
+    super.key,
+    required this.child,
+    required this.canvasPos,
+    required this.canvasScale,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final images = ref.watch(imageCanvasProvider);
+    final controls = ref.watch(imageCanvasControlsProvider);
+
+    Offset gesturePointToCanvas(Offset point, [Offset? canvas]) {
+      return (point -
+                  Offset(
+                    (context.size?.width ?? 0) / 2,
+                    (context.size?.height ?? 0) / 2,
+                  )) /
+              canvasScale -
+          (canvas ?? canvasPos);
+    }
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onPanStart: (details) {
+        // Remember original position of everything we hit and might pan
+        final hitpos = gesturePointToCanvas(details.localPosition);
+        ref.read(imageCanvasProvider.notifier).setBuildingMask(
+              ImageCanvasMaskStroke(
+                r: controls.maskRadius,
+                points: <Offset>[hitpos],
+              ),
+            );
+      },
+      onPanUpdate: (details) {
+        final hitpos = gesturePointToCanvas(details.localPosition);
+        ref.read(imageCanvasProvider.notifier).addPointToBuildingMask(hitpos);
+      },
+      onPanEnd: (details) {
+        // TODO: Find and attach mask stroke only to images it hit
+        ref.read(imageCanvasProvider.notifier)
+          ..addMaskToAll(images.buildingMask)
+          ..setBuildingMask(const ImageCanvasMaskStroke());
+      },
+      child: child,
+    );
+  }
+}
+
 class ImageCanvasWidget extends HookConsumerWidget {
   const ImageCanvasWidget({super.key});
 
@@ -489,7 +678,12 @@ class ImageCanvasWidget extends HookConsumerWidget {
           (image) => Positioned(
             left: image.pos.left,
             top: image.pos.top,
-            child: ImageCanvasImageSetWidget(imageset: image),
+            child: ImageCanvasImageSetWidget(
+              imageset: image,
+              extraMask: images.buildingMask.copyWith(
+                  points: images.buildingMask.points
+                      .map((pos) => pos - image.pos.topLeft)),
+            ),
           ),
         )
         .toList();
@@ -498,28 +692,47 @@ class ImageCanvasWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final images = ref.watch(imageCanvasProvider);
-    final frame = ref.watch(imageCanvasFrameWithSizeProvider).pos;
     final controls = ref.watch(imageCanvasControlsWithModeProvider);
+
+    final mode = controls.value?.mode ?? ImageCanvasMode.auto;
+    final isGenerationMode = controls.value?.isGenerationMode() ?? true;
 
     final canvasPos = useState<Offset>(Offset(0, 0));
     final canvasScale = useState<double>(1);
 
-    final panStart = useState<Offset?>(null);
-    final hitCanvas = useState<Offset>(const Offset(0, 0));
-    final hitFrame = useState<Rect?>(null);
-    final hitSet = useState<ImageCanvasImageSet?>(null);
-
     final ImageCanvasImageSet? selectedImageset = images.selectedImageset();
 
-    Offset gesturePointToCanvas(Offset point, [ValueNotifier<Offset>? canvas]) {
-      return (point -
-                  Offset(
-                    (context.size?.width ?? 0) / 2,
-                    (context.size?.height ?? 0) / 2,
-                  )) /
-              canvasScale.value -
-          (canvas ?? canvasPos).value;
-    }
+    final canvasWidget = Center(
+      child: SizedBox(
+        width: 1,
+        height: 1,
+        child: Transform(
+          filterQuality: FilterQuality.medium,
+          transform: (Matrix4.identity() * canvasScale.value) *
+              Matrix4.translation(
+                vm.Vector3(
+                  canvasPos.value.dx,
+                  canvasPos.value.dy,
+                  0,
+                ),
+              ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              ..._buildImages(images),
+              ...(isGenerationMode
+                  ? [
+                      ImageCanvasFrameWidget(
+                        mode: mode,
+                        canvasScale: canvasScale.value,
+                      )
+                    ]
+                  : []),
+            ],
+          ),
+        ),
+      ),
+    );
 
     return Container(
       clipBehavior: Clip.hardEdge,
@@ -539,119 +752,18 @@ class ImageCanvasWidget extends HookConsumerWidget {
               }
             },
             // This GestureDetector is used for panning, scaling and mask / paint modes
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTapDown: (details) {},
-              onTapUp: (details) {
-                // If we tapped (without pan), treat it like a select / unselect
-                final hitpos = gesturePointToCanvas(details.localPosition);
-
-                final tester = ImageCanvaHitTests(frame, images.imagesets);
-                final hitSet = tester.imagesetHittest(hitpos);
-
-                if (hitSet == null) {
-                  ref.read(imageCanvasProvider.notifier).unselect();
-                } else {
-                  ref.read(imageCanvasProvider.notifier).select(hitSet.key);
-                }
-              },
-              onScaleStart: (details) {
-                // Remember original position of everything we hit and might pan
-                final hitpos = gesturePointToCanvas(details.localFocalPoint);
-                final tester = ImageCanvaHitTests(frame, images.imagesets);
-
-                panStart.value = hitpos;
-                hitFrame.value = tester.frameHittest(hitpos) ? frame : null;
-                hitSet.value = tester.imagesetHittest(hitpos);
-                hitCanvas.value = canvasPos.value;
-
-                // If we're going to move the hitSet (instead of hitFrame) select it too
-                if (hitFrame.value == null && hitSet.value != null) {
-                  ref
-                      .read(imageCanvasProvider.notifier)
-                      .select(hitSet.value!.key);
-                }
-              },
-              onScaleUpdate: (details) {
-                // Since we might be moving the canvas, use the remembered canvas details
-                final pos = gesturePointToCanvas(
-                  details.localFocalPoint,
-                  hitCanvas,
-                );
-
-                // We always move the panned item "original position" + "total delta from start"
-                final delta = pos - panStart.value!;
-
-                final hitFrameVal = hitFrame.value;
-                final hitSetVal = hitSet.value;
-
-                if (hitFrameVal != null) {
-                  // Frame always has highest hit priority on pan
-                  final tester = ImageCanvaHitTests(null, images.imagesets);
-
-                  var newPos = hitFrameVal.shift(delta);
-                  newPos = newPos.shift(tester.snapTest(newPos));
-
-                  ref
-                      .read(imageCanvasFrameProvider.notifier)
-                      .setCenter(newPos.center);
-                } else if (hitSetVal != null) {
-                  // Imageset has next highest hit priority
-                  final tester = ImageCanvaHitTests(
-                    frame,
-                    images.imagesets.where((set) => set.key != hitSetVal.key),
-                  );
-
-                  var newPos = hitSetVal.pos.shift(delta);
-                  newPos = newPos.shift(tester.snapTest(newPos));
-
-                  ref.read(imageCanvasProvider.notifier).setImageSetCenter(
-                        hitSetVal.key,
-                        newPos.center,
-                      );
-                } else {
-                  // And if we hit nothing, pan the canvas
-                  canvasPos.value = hitCanvas.value + delta;
-                }
-              },
-              onScaleEnd: (details) {
-                panStart.value = null;
-              },
-              child: Center(
-                child: SizedBox(
-                  width: 1,
-                  height: 1,
-                  child: Transform(
-                    filterQuality: panStart.value == null
-                        ? FilterQuality.medium
-                        : FilterQuality.none,
-                    transform: (Matrix4.identity() * canvasScale.value) *
-                        Matrix4.translation(
-                          vm.Vector3(
-                            canvasPos.value.dx,
-                            canvasPos.value.dy,
-                            0,
-                          ),
-                        ),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        ..._buildImages(images),
-                        ...((controls.valueOrNull?.isGenerationMode() ?? false)
-                            ? [
-                                ImageCanvasFrameWidget(
-                                  mode: controls.valueOrNull?.mode ??
-                                      ImageCanvasMode.create,
-                                  canvasScale: canvasScale.value,
-                                )
-                              ]
-                            : []),
-                      ],
-                    ),
+            child: isGenerationMode
+                ? GenerationGestureHandler(
+                    canvasPos: canvasPos.value,
+                    canvasScale: canvasScale.value,
+                    canvasPanCallback: (pos) => canvasPos.value = pos,
+                    child: canvasWidget,
+                  )
+                : PaintGestureHandler(
+                    child: canvasWidget,
+                    canvasPos: canvasPos.value,
+                    canvasScale: canvasScale.value,
                   ),
-                ),
-              ),
-            ),
           ),
           selectedImageset != null
               ? Positioned(
@@ -665,14 +777,6 @@ class ImageCanvasWidget extends HookConsumerWidget {
             bottom: 10,
             right: 10,
             child: ImageCanvasToolWidget(),
-            /* TextButton(
-              onPressed: images.imagesets.isNotEmpty
-                  ? () {
-                      GenerationExecuter.downloadImages(ref);
-                    }
-                  : null,
-              child: Icon(Icons.download),
-            ), */
           ),
         ],
       ),

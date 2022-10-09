@@ -133,16 +133,21 @@ class Tokens extends $pb.GeneratedMessage {
 class ImageAdjustment_Gaussian extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ImageAdjustment_Gaussian', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gooseai'), createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sigma', $pb.PbFieldType.OF)
+    ..e<GaussianDirection>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'direction', $pb.PbFieldType.OE, defaultOrMaker: GaussianDirection.DIRECTION_NONE, valueOf: GaussianDirection.valueOf, enumValues: GaussianDirection.values)
     ..hasRequiredFields = false
   ;
 
   ImageAdjustment_Gaussian._() : super();
   factory ImageAdjustment_Gaussian({
     $core.double? sigma,
+    GaussianDirection? direction,
   }) {
     final _result = create();
     if (sigma != null) {
       _result.sigma = sigma;
+    }
+    if (direction != null) {
+      _result.direction = direction;
     }
     return _result;
   }
@@ -175,6 +180,15 @@ class ImageAdjustment_Gaussian extends $pb.GeneratedMessage {
   $core.bool hasSigma() => $_has(0);
   @$pb.TagNumber(1)
   void clearSigma() => clearField(1);
+
+  @$pb.TagNumber(2)
+  GaussianDirection get direction => $_getN(1);
+  @$pb.TagNumber(2)
+  set direction(GaussianDirection v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasDirection() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDirection() => clearField(2);
 }
 
 class ImageAdjustment_Invert extends $pb.GeneratedMessage {

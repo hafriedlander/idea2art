@@ -5,16 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/services/generate.dart';
 
+@immutable
 class ImageCanvasMaskStroke {
-  final List<Offset> points;
+  final Iterable<Offset> points;
   final double r;
 
-  ImageCanvasMaskStroke({
+  const ImageCanvasMaskStroke({
     this.points = const <Offset>[],
     this.r = 10,
   });
 
-  ImageCanvasMaskStroke copyWith({double? r, List<Offset>? points}) {
+  ImageCanvasMaskStroke copyWith({
+    double? r,
+    Iterable<Offset>? points,
+  }) {
     return ImageCanvasMaskStroke(
       r: r ?? this.r,
       points: points ?? this.points,
@@ -22,6 +26,7 @@ class ImageCanvasMaskStroke {
   }
 }
 
+@immutable
 class ImageCanvasImage {
   static int keystate = 0;
 
@@ -47,8 +52,31 @@ class ImageCanvasImage {
       maskstrokes: maskstrokes ?? this.maskstrokes,
     );
   }
+
+  // TODO: This shouldn't really be here
+  void drawToCanvas(
+    Canvas canvas, {
+    ImageCanvasMaskStroke extraMask = const ImageCanvasMaskStroke(),
+  }) {
+    canvas.drawImage(image, Offset.zero, Paint());
+
+    final maskPaint = Paint();
+    maskPaint.color = Colors.red;
+    maskPaint.strokeCap = ui.StrokeCap.round;
+    maskPaint.blendMode = ui.BlendMode.clear;
+
+    for (final mask in [...maskstrokes, extraMask]) {
+      maskPaint.strokeWidth = mask.r * 2;
+      canvas.drawPoints(
+        ui.PointMode.polygon,
+        mask.points.toList(),
+        maskPaint,
+      );
+    }
+  }
 }
 
+@immutable
 class ImageCanvasImageSet {
   static int keystate = 0;
 
@@ -135,22 +163,27 @@ class ImageCanvasImageSet {
   }
 }
 
+@immutable
 class ImageCanvas {
   ImageCanvas({
     this.imagesets = const <ImageCanvasImageSet>[],
+    this.buildingMask = const ImageCanvasMaskStroke(),
     this.selectedKey = -1,
   });
 
   final List<ImageCanvasImageSet> imagesets;
   final int selectedKey;
+  final ImageCanvasMaskStroke buildingMask;
 
   ImageCanvas copyWith({
     List<ImageCanvasImageSet>? imagesets,
     int? selectedKey,
+    ImageCanvasMaskStroke? buildingMask,
   }) {
     return ImageCanvas(
       imagesets: imagesets ?? this.imagesets,
       selectedKey: selectedKey ?? this.selectedKey,
+      buildingMask: buildingMask ?? this.buildingMask,
     );
   }
 
@@ -164,6 +197,7 @@ class ImageCanvas {
   }
 }
 
+@immutable
 class ImageCanvasFrame {
   final Rect pos;
 
@@ -188,16 +222,23 @@ enum ImageCanvasMode {
   mask,
 }
 
+@immutable
 class ImageCanvasControls {
-  ImageCanvasControls({this.mode = ImageCanvasMode.create});
+  ImageCanvasControls({
+    this.mode = ImageCanvasMode.auto,
+    this.maskRadius = 32,
+  });
 
   final ImageCanvasMode mode;
+  final double maskRadius;
 
   ImageCanvasControls copyWith({
     ImageCanvasMode? mode,
+    double? maskRadius,
   }) {
     return ImageCanvasControls(
       mode: mode ?? this.mode,
+      maskRadius: maskRadius ?? this.maskRadius,
     );
   }
 
