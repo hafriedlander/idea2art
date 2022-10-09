@@ -181,30 +181,34 @@ extension RefDebounceExtension on Ref {
 const imageCanvasFrameModeDebounce = Duration(milliseconds: 2);
 final imageCanvasFrameModeStopwatch = Stopwatch();
 
-final imageCanvasFrameModeProvider =
-    FutureProvider<ImageCanvasMode>((ref) async {
+final imageCanvasControlsWithModeProvider =
+    FutureProvider<ImageCanvasControls>((ref) async {
+  var controls = ref.watch(imageCanvasControlsProvider);
   final frame = ref.watch(imageCanvasFrameWithSizeProvider);
   final imageCanvas = ref.watch(imageCanvasProvider);
 
-  // This is potentially a fairly expensive operation, so debounce a little
-  await ref.debounce(imageCanvasFrameModeDebounce);
+  if (controls.mode == ImageCanvasMode.auto) {
+    // This is potentially a fairly expensive operation, so debounce a little
+    await ref.debounce(imageCanvasFrameModeDebounce);
 
-  try {
-    imageCanvasFrameModeStopwatch.reset();
-    imageCanvasFrameModeStopwatch.start();
-    final res = await GenerationExecuter.testImageMode(frame.pos, imageCanvas);
-    imageCanvasFrameModeStopwatch.stop();
+    try {
+      imageCanvasFrameModeStopwatch.reset();
+      imageCanvasFrameModeStopwatch.start();
+      final res =
+          await GenerationExecuter.testImageMode(frame.pos, imageCanvas);
+      imageCanvasFrameModeStopwatch.stop();
 
-    if (imageCanvasFrameModeStopwatch.elapsed >
-        imageCanvasFrameModeDebounce * 0.5) {
-      debugPrint(
-          "Warning - frame mode calculation took longer than half of debounce time, ${imageCanvasFrameModeStopwatch.elapsedMilliseconds}ms");
+      if (imageCanvasFrameModeStopwatch.elapsed >
+          imageCanvasFrameModeDebounce * 0.5) {
+        debugPrint(
+            "Warning - frame mode calculation took longer than half of debounce time, ${imageCanvasFrameModeStopwatch.elapsedMilliseconds}ms");
+      }
+
+      controls = controls.copyWith(mode: res);
+    } catch (e) {
+      debugPrint("Ouch, ${e}");
     }
-
-    return res;
-  } catch (e) {
-    debugPrint("Ouch, ${e}");
   }
 
-  return ImageCanvasMode.create;
+  return controls;
 });

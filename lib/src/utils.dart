@@ -169,9 +169,15 @@ class GenerationExecuter {
   static void generateForNewImageset(WidgetRef ref) async {
     final imageCanvas = ref.read(imageCanvasProvider);
     final imageFrame = ref.read(imageCanvasFrameWithSizeProvider);
+    var mode = ref.read(imageCanvasControlsProvider).mode;
 
-    // Don't read the mode from the provider, recalulate it to be sure we're not lagged
-    final mode = await testImageModeWithCanvas(imageFrame.pos, imageCanvas);
+    // If mode is auto, recalulate it to be sure we're not lagged
+    if (mode == ImageCanvasMode.auto) {
+      mode = await testImageModeWithCanvas(
+        imageFrame.pos,
+        imageCanvas,
+      );
+    }
 
     ByteData? image;
     ByteData? mask;

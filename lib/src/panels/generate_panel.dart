@@ -91,43 +91,24 @@ class GeneratePrimaryPanel extends ConsumerWidget {
     final hasResult = ref.watch(
         resultImagesProvider.select((result) => result.images.isNotEmpty));
 
+    final controls = ref.watch(imageCanvasControlsProvider);
+
     return Column(children: [
       Expanded(
         child: Center(child: ImageCanvasWidget()),
       ),
       SizedBox(
         width: 512,
-        child: Row(children: const [
-          Expanded(child: GeneratePromptField()),
-          GenerateButton(),
-        ]),
+        child: Row(
+            children: controls.isGenerationMode()
+                ? [
+                    Expanded(child: GeneratePromptField()),
+                    GenerateButton(),
+                  ]
+                : []),
       ),
     ]);
   }
-}
-
-class DIImage {
-  final di.Image image;
-  final Rect pos;
-
-  DIImage({
-    required this.image,
-    required this.pos,
-  });
-
-  DIImage.fromBytes({
-    required ByteData bytes,
-    required pos,
-  }) : this(
-          image: di.Image.fromBytes(
-            pos.width,
-            pos.height,
-            Uint8List.view(bytes.buffer).toList(),
-            // TODO: This seems wrong, the bytes should definitely be in RGBA order. Bug in Flutter or Image?
-            format: di.Format.bgra,
-          ),
-          pos: pos,
-        );
 }
 
 class GenerateButton extends ConsumerWidget {
@@ -135,14 +116,14 @@ class GenerateButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final frameMode = ref.watch(imageCanvasFrameModeProvider);
+    final controls = ref.watch(imageCanvasControlsWithModeProvider);
     final available = ref.watch(generateServiceAvailableProvider);
 
     final label = {
       ImageCanvasMode.create: 'CREATE',
       ImageCanvasMode.variants: 'VARIANTS',
       ImageCanvasMode.fill: 'FILL',
-    }[frameMode.valueOrNull ?? ImageCanvasMode.create]!;
+    }[controls.valueOrNull?.mode ?? ImageCanvasMode.create]!;
 
     return ElevatedButton(
       onPressed: available

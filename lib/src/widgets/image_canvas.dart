@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:idea2art/src/constants.dart';
 import 'package:vector_math/vector_math_64.dart' as vm;
 
 import 'package:collection/collection.dart';
@@ -114,7 +115,7 @@ class ImageCanvasExpandButton extends HookConsumerWidget {
       onPressed: available
           ? () => GenerationExecuter.generateForExistingImageset(ref, imageset)
           : null,
-      child: const Icon(Icons.history),
+      child: const Icon(Idea2artIcons.generate_more),
     );
   }
 }
@@ -133,7 +134,7 @@ class ImageCanvasDeleteButton extends HookConsumerWidget {
       onSlowPress: () {
         ref.read(imageCanvasProvider.notifier).delete(imageset.key);
       },
-      child: const Icon(Icons.delete_forever),
+      child: const Icon(Idea2artIcons.delete),
     );
   }
 }
@@ -151,7 +152,7 @@ class ImageCanvasCancelButton extends HookConsumerWidget {
       onSlowPress: () {
         ref.read(imageCanvasProvider.notifier).cancel(imageset.key);
       },
-      child: const Icon(Icons.cancel),
+      child: const Icon(Idea2artIcons.cancel),
     );
   }
 }
@@ -278,6 +279,14 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
     final pos = ref.watch(imageCanvasFrameWithSizeProvider).pos;
     final available = ref.watch(generateServiceAvailableProvider);
 
+    final label = {
+      ImageCanvasMode.create: 'CREATE',
+      ImageCanvasMode.variants: 'VARIANTS',
+      ImageCanvasMode.fill: 'FILL',
+    }[mode];
+
+    if (label == null) return Container();
+
     var borderColor = {
       ImageCanvasMode.create: Colors.lightGreen,
       ImageCanvasMode.variants: Colors.yellow,
@@ -285,16 +294,10 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
     }[mode]!
         .withAlpha(available ? 255 : 96);
 
-    final label = {
-      ImageCanvasMode.create: 'CREATE',
-      ImageCanvasMode.variants: 'VARIANTS',
-      ImageCanvasMode.fill: 'FILL',
-    }[mode]!;
-
     final icon = {
-      ImageCanvasMode.create: Icons.add_circle_outline,
-      ImageCanvasMode.variants: Icons.autorenew,
-      ImageCanvasMode.fill: Icons.all_out,
+      ImageCanvasMode.create: Idea2artIcons.create,
+      ImageCanvasMode.variants: Idea2artIcons.variants,
+      ImageCanvasMode.fill: Idea2artIcons.fill,
     }[mode]!;
 
     return Positioned(
@@ -393,6 +396,90 @@ class ImageCanvaHitTests {
   }
 }
 
+class ImageCanvasToolWidget extends HookConsumerWidget {
+  const ImageCanvasToolWidget({super.key});
+
+  Widget buildButton(callback, IconData icon, {selected = false}) {
+    final bg = selected ? Colors.lightGreen : Colors.white;
+    final color = selected ? Colors.white : Colors.black;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: ShapeDecoration(
+          color: bg,
+          shape: CircleBorder(side: BorderSide(color: bg)),
+        ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            callback();
+          },
+          child: Icon(
+            icon,
+            color: color,
+            size: 32,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final expanded = useState<bool>(false);
+    final controls = ref.watch(imageCanvasControlsProvider);
+
+    const icons = {
+      ImageCanvasMode.auto: Idea2artIcons.auto,
+      ImageCanvasMode.create: Idea2artIcons.create,
+      ImageCanvasMode.variants: Idea2artIcons.variants,
+      ImageCanvasMode.fill: Idea2artIcons.fill,
+      ImageCanvasMode.mask: Idea2artIcons.mask,
+    };
+
+    final icon = icons[controls.mode]!;
+
+    if (expanded.value) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: ImageCanvasMode.values
+            .map<Widget>(
+              (val) => buildButton(
+                () {
+                  expanded.value = false;
+                  ref.read(imageCanvasControlsProvider.notifier).setMode(val);
+                },
+                icons[val]!,
+                selected: false,
+              ),
+            )
+            .toList(),
+      );
+    } else if (controls.mode == ImageCanvasMode.mask) {
+      return Row(
+        children: [
+          SizedBox(
+            width: 200,
+            height: 32,
+            child: Slider(value: 8, max: 32, onChanged: (val) {}),
+          ),
+          buildButton(() => expanded.value = true, Idea2artIcons.mask,
+              selected: true)
+        ],
+      );
+    } else {
+      return buildButton(
+        () => expanded.value = true,
+        icons[controls.mode]!,
+        selected: true,
+      );
+    }
+  }
+}
+
 class ImageCanvasWidget extends HookConsumerWidget {
   const ImageCanvasWidget({super.key});
 
@@ -412,7 +499,7 @@ class ImageCanvasWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final images = ref.watch(imageCanvasProvider);
     final frame = ref.watch(imageCanvasFrameWithSizeProvider).pos;
-    final frameMode = ref.watch(imageCanvasFrameModeProvider);
+    final controls = ref.watch(imageCanvasControlsWithModeProvider);
 
     final canvasPos = useState<Offset>(Offset(0, 0));
     final canvasScale = useState<double>(1);
@@ -550,10 +637,15 @@ class ImageCanvasWidget extends HookConsumerWidget {
                       clipBehavior: Clip.none,
                       children: [
                         ..._buildImages(images),
-                        ImageCanvasFrameWidget(
-                          mode: frameMode.value ?? ImageCanvasMode.create,
-                          canvasScale: canvasScale.value,
-                        ),
+                        ...((controls.valueOrNull?.isGenerationMode() ?? false)
+                            ? [
+                                ImageCanvasFrameWidget(
+                                  mode: controls.valueOrNull?.mode ??
+                                      ImageCanvasMode.create,
+                                  canvasScale: canvasScale.value,
+                                )
+                              ]
+                            : []),
                       ],
                     ),
                   ),
@@ -569,17 +661,18 @@ class ImageCanvasWidget extends HookConsumerWidget {
                   ),
                 )
               : Container(),
-          Positioned(
+          const Positioned(
             bottom: 10,
             right: 10,
-            child: TextButton(
+            child: ImageCanvasToolWidget(),
+            /* TextButton(
               onPressed: images.imagesets.isNotEmpty
                   ? () {
                       GenerationExecuter.downloadImages(ref);
                     }
                   : null,
               child: Icon(Icons.download),
-            ),
+            ), */
           ),
         ],
       ),

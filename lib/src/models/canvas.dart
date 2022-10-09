@@ -4,14 +4,26 @@ import 'package:flutter/material.dart';
 
 import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/services/generate.dart';
-import 'package:image/image.dart' as di;
 
-class ImageCanvasMaskStroke {}
+class ImageCanvasMaskStroke {
+  final List<Offset> points;
+  final double r;
+
+  ImageCanvasMaskStroke({
+    this.points = const <Offset>[],
+    this.r = 10,
+  });
+
+  ImageCanvasMaskStroke copyWith({double? r, List<Offset>? points}) {
+    return ImageCanvasMaskStroke(
+      r: r ?? this.r,
+      points: points ?? this.points,
+    );
+  }
+}
 
 class ImageCanvasImage {
   static int keystate = 0;
-
-  late final int key;
 
   ImageCanvasImage({
     key = -1,
@@ -21,10 +33,11 @@ class ImageCanvasImage {
     this.key = key < 0 ? (keystate++) : key;
   }
 
+  late final int key;
   final ui.Image image;
   final List<ImageCanvasMaskStroke> maskstrokes;
 
-  copyWith({
+  ImageCanvasImage copyWith({
     ui.Image? image,
     List<ImageCanvasMaskStroke>? maskstrokes,
   }) {
@@ -131,7 +144,7 @@ class ImageCanvas {
   final List<ImageCanvasImageSet> imagesets;
   final int selectedKey;
 
-  copyWith({
+  ImageCanvas copyWith({
     List<ImageCanvasImageSet>? imagesets,
     int? selectedKey,
   }) {
@@ -168,9 +181,11 @@ class ImageCanvasFrame {
 }
 
 enum ImageCanvasMode {
+  auto,
   create,
   variants,
   fill,
+  mask,
 }
 
 class ImageCanvasControls {
@@ -178,11 +193,18 @@ class ImageCanvasControls {
 
   final ImageCanvasMode mode;
 
-  copyWith({
+  ImageCanvasControls copyWith({
     ImageCanvasMode? mode,
   }) {
-    ImageCanvasControls(
+    return ImageCanvasControls(
       mode: mode ?? this.mode,
     );
+  }
+
+  bool isGenerationMode() {
+    return mode == ImageCanvasMode.auto ||
+        mode == ImageCanvasMode.create ||
+        mode == ImageCanvasMode.variants ||
+        mode == ImageCanvasMode.fill;
   }
 }
