@@ -108,10 +108,12 @@ class ImageCanvasExpandButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final available = ref.watch(generateServiceAvailableProvider);
+
     return TextButton(
-      onPressed: () {
-        GenerationExecuter.generateForExistingImageset(ref, imageset);
-      },
+      onPressed: available
+          ? () => GenerationExecuter.generateForExistingImageset(ref, imageset)
+          : null,
       child: const Icon(Icons.history),
     );
   }
@@ -274,12 +276,14 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
     double borderSize = this.borderSize / canvasScale;
 
     final pos = ref.watch(imageCanvasFrameWithSizeProvider).pos;
+    final available = ref.watch(generateServiceAvailableProvider);
 
-    final borderColor = {
+    var borderColor = {
       ImageCanvasMode.create: Colors.lightGreen,
       ImageCanvasMode.variants: Colors.yellow,
       ImageCanvasMode.fill: Colors.red,
-    }[mode]!;
+    }[mode]!
+        .withAlpha(available ? 255 : 96);
 
     final label = {
       ImageCanvasMode.create: 'CREATE',

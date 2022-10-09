@@ -135,14 +135,8 @@ class GenerateButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final prompt = ref.watch(generatePromptProvider);
-    final settings = ref.watch(generateSettingsProvider);
-    final engine = ref.watch(generateSettingsEngineProvider);
-    final service = ref.watch(generateServiceProvider);
     final frameMode = ref.watch(imageCanvasFrameModeProvider);
-
-    final enabled =
-        service.hasValue && prompt.prompt.isNotEmpty && engine != null;
+    final available = ref.watch(generateServiceAvailableProvider);
 
     final label = {
       ImageCanvasMode.create: 'CREATE',
@@ -151,7 +145,7 @@ class GenerateButton extends ConsumerWidget {
     }[frameMode.valueOrNull ?? ImageCanvasMode.create]!;
 
     return ElevatedButton(
-      onPressed: enabled
+      onPressed: available
           ? () {
               GenerationExecuter.generateForNewImageset(ref);
             }

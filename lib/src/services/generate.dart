@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'package:async/async.dart';
 import 'package:image/image.dart' as di;
 import 'package:fixnum/fixnum.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:grpc/grpc.dart';
 import 'package:grpc/grpc_or_grpcweb.dart';
 import 'package:grpc/grpc_web.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:idea2art/src/models/engine.dart';
 
@@ -28,20 +32,34 @@ class GenerateServiceAuthorizationException implements Exception {
   GenerateServiceAuthorizationException([this.message]);
 }
 
+class CompleteNotifier extends StateNotifier<bool> {
+  CompleteNotifier() : super(false);
+
+  void setComplete() {
+    state = true;
+  }
+
+  bool isComplete() {
+    return state;
+  }
+}
+
 class GenerateResult {
   final StreamController<ImageProvider> _images;
   final StreamController<ui.Image> _uiImages;
   final StreamController<double> _progress;
 
-  final ResponseStream<Answer> _sourceStream;
+  final CancelDelegateStream<Answer> _sourceStream;
+  late Stream<double> _progressBroadcast;
 
-  final Completer<bool> _inprogress;
+  final CompleteNotifier _complete;
 
   GenerateResult(this._sourceStream)
       : _images = StreamController<ImageProvider>(),
         _uiImages = StreamController<ui.Image>(),
         _progress = StreamController<double>(),
-        _inprogress = Completer<bool>() {
+        _complete = CompleteNotifier() {
+    _progressBroadcast = _progress.stream.asBroadcastStream();
     _startListening();
   }
 
@@ -59,7 +77,7 @@ class GenerateResult {
     } on GrpcError {
       // pass
     } finally {
-      _inprogress.complete(true);
+      _complete.setComplete();
       _images.close();
       _uiImages.close();
       _progress.close();
@@ -70,8 +88,8 @@ class GenerateResult {
     _sourceStream.cancel();
   }
 
-  Future<bool> get inprogress {
-    return _inprogress.future;
+  CompleteNotifier get complete {
+    return _complete;
   }
 
   Stream<ImageProvider> get images {
@@ -83,20 +101,46 @@ class GenerateResult {
   }
 
   Stream<double> get progress {
-    return _progress.stream;
+    return _progressBroadcast;
   }
+}
+
+class BusyNotifier extends StateNotifier<bool> {
+  BusyNotifier() : super(false);
+
+  void setBusy(bool busy) {
+    state = busy;
+  }
+
+  bool isBusy() {
+    return state;
+  }
+}
+
+class CancelDelegateStream<R> extends DelegatingStream<R> {
+  final ResponseStream<R> cancelDelegate;
+
+  CancelDelegateStream(stream, this.cancelDelegate) : super(stream);
+
+  Future<void> cancel() => cancelDelegate.cancel();
 }
 
 class GenerateService {
   GenerateService(GenerateServer this.server)
-      : channel = GrpcWebClientChannel.xhr(Uri(
+      : busy = BusyNotifier(),
+        channel = GrpcWebClientChannel.xhr(
+          Uri(
             scheme: server.port == 443 ? 'https' : 'http',
             host: server.host,
             port: server.port,
-            path: "/"));
+            path: "/",
+          ),
+        );
 
   final GenerateServer server;
   final GrpcWebClientChannel channel;
+
+  final BusyNotifier busy;
 
   Future<bool> test() async {
     try {
@@ -135,6 +179,27 @@ class GenerateService {
         ),
       ),
     );
+  }
+
+  CancelDelegateStream<T> trackBusy<T>(ResponseStream<T> Function() callback) {
+    if (busy.isBusy()) {
+      throw Exception("Tried to make a request, but Generator is already busy");
+    }
+
+    busy.setBusy(true);
+    final result = callback();
+    final controller = StreamController<T>();
+
+    result.listen(
+      (value) => controller.add(value),
+      onError: (error) => controller.addError(error),
+      onDone: () {
+        busy.setBusy(false);
+        controller.close();
+      },
+    );
+
+    return CancelDelegateStream(controller.stream, result);
   }
 
   GenerateResult generate(
@@ -258,9 +323,12 @@ class GenerateService {
       ),
     );
 
-    return GenerateResult(stub.generate(
-      request,
-      options: CallOptions(metadata: {"authorization": "Bearer ${server.key}"}),
-    ));
+    final responseStream = trackBusy<Answer>(() => stub.generate(
+          request,
+          options:
+              CallOptions(metadata: {"authorization": "Bearer ${server.key}"}),
+        ));
+
+    return GenerateResult(responseStream);
   }
 }

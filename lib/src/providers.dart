@@ -70,6 +70,18 @@ final generateServiceProvider = FutureProvider<GenerateService>((ref) async {
   return Completer<Never>().future;
 });
 
+final generateServiceBusyProvider =
+    StateNotifierProvider<BusyNotifier, bool>((ref) {
+  final service = ref.watch(generateServiceProvider);
+
+  final serviceValue = service.value;
+  if (serviceValue != null) {
+    return serviceValue.busy;
+  }
+
+  return BusyNotifier();
+});
+
 final enginesProvider = FutureProvider<Engines>((ref) async {
   final service = await ref.watch(generateServiceProvider.future);
   return service.engines();
@@ -105,6 +117,18 @@ final generateSettingsEngineProvider = Provider<Engine?>((ref) {
   }
 
   return null;
+});
+
+final generateServiceAvailableProvider = Provider<bool>((ref) {
+  final prompt = ref.watch(generatePromptProvider);
+  final engine = ref.watch(generateSettingsEngineProvider);
+  final service = ref.watch(generateServiceProvider);
+  final busy = ref.watch(generateServiceBusyProvider);
+
+  return service.hasValue &&
+      prompt.prompt.isNotEmpty &&
+      engine != null &&
+      !busy;
 });
 
 final imageCanvasProvider =
