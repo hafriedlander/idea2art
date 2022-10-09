@@ -283,7 +283,7 @@ class GenerationExecuter {
     ref.read(imageCanvasProvider.notifier).add(set);
     ref.read(imageCanvasProvider.notifier).selectByImageset(set);
 
-    if (true) {
+    if (false) {
       if (image != null)
         ref.read(imageCanvasProvider.notifier).addUIImageToSet(
             set.key, await decodeImageFromList(Uint8List.view(image.buffer)));
