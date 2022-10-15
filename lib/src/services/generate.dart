@@ -147,8 +147,12 @@ class GenerateService {
       final stub = eg.EnginesServiceClient(channel);
       final res = await stub.listEngines(
         eg.ListEnginesRequest(),
-        options:
-            CallOptions(metadata: {"authorization": "Bearer ${server.key}"}),
+        options: CallOptions(
+          metadata: {
+            "authorization": "Bearer ${server.key}",
+            "Bypass-Tunnel-Reminder": "true",
+          },
+        ),
       );
     } on GrpcError catch (err) {
       if (err.code == 14) {
@@ -166,7 +170,12 @@ class GenerateService {
     final stub = eg.EnginesServiceClient(channel);
     var res = await stub.listEngines(
       eg.ListEnginesRequest(),
-      options: CallOptions(metadata: {"authorization": "Bearer ${server.key}"}),
+      options: CallOptions(
+        metadata: {
+          "authorization": "Bearer ${server.key}",
+          "Bypass-Tunnel-Reminder": "true",
+        },
+      ),
     );
 
     return Engines(
@@ -318,7 +327,7 @@ class GenerateService {
         seed: settings.seed >= 0 ? [settings.seed] : [],
         transform: TransformType(
           // TODO: Don't hardcode
-          diffusion: DiffusionSampler.SAMPLER_DDIM,
+          diffusion: DiffusionSampler.SAMPLER_K_EULER_ANCESTRAL,
         ),
         parameters: [
           StepParameter(
@@ -334,8 +343,12 @@ class GenerateService {
 
     final responseStream = trackBusy<Answer>(() => stub.generate(
           request,
-          options:
-              CallOptions(metadata: {"authorization": "Bearer ${server.key}"}),
+          options: CallOptions(
+            metadata: {
+              "authorization": "Bearer ${server.key}",
+              "Bypass-Tunnel-Reminder": "true",
+            },
+          ),
         ));
 
     return GenerateResult(responseStream);

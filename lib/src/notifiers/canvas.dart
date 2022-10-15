@@ -141,26 +141,35 @@ class ImageCanvasNotifier extends StateNotifier<ImageCanvas> {
   }
 
   void addMaskToAll(ImageCanvasMaskStroke mask) {
-    state = state.copyWith(
-        imagesets: state.imagesets.map<ImageCanvasImageSet>((set) {
-      final image = set.selectedImage();
-      if (image == null) return set;
+    final extents = mask.extents();
+    if (extents == null) return;
 
-      return set.copyWith(
-        images: set.images
-            .map((image) => image.copyWith(
-                  image: image.image,
-                  maskstrokes: [
-                    ...image.maskstrokes,
-                    mask.copyWith(
-                      points:
-                          mask.points.map((point) => point - set.pos.topLeft),
-                    ),
-                  ],
-                ))
-            .toList(),
-      );
-    }).toList());
+    state = state.copyWith(
+        imagesets: state.imagesets.map<ImageCanvasImageSet>(
+      (set) {
+        // If this set doesn't overlap this mask, just return it
+        if (!set.pos.overlaps(extents)) return set;
+
+        // If this set doesn't have a select image, just return it
+        final image = set.selectedImage();
+        if (image == null) return set;
+
+        return set.copyWith(
+          images: set.images
+              .map((image) => image.copyWith(
+                    image: image.image,
+                    maskstrokes: [
+                      ...image.maskstrokes,
+                      mask.copyWith(
+                        points:
+                            mask.points.map((point) => point - set.pos.topLeft),
+                      ),
+                    ],
+                  ))
+              .toList(),
+        );
+      },
+    ).toList());
   }
 
   void setBuildingMask(ImageCanvasMaskStroke buildingMask) {

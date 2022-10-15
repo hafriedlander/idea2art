@@ -176,7 +176,7 @@ class GenerationExecuter {
 
     // If mode is auto, recalulate it to be sure we're not lagged
     if (mode == ImageCanvasMode.auto) {
-      mode = await testImageModeWithCanvas(
+      mode = await testImageMode(
         imageFrame.pos,
         imageCanvas,
       );
@@ -337,7 +337,7 @@ class GenerationExecuter {
   /* This is a nice solution, and maybe good for mobile. At the moment
   I'm avoiding it on web until https://github.com/flutter/flutter/issues/113094
   is fixed */
-  static Future<ImageCanvasMode> testImageModeWithCanvas(
+  static Future<ImageCanvasMode> testImageModeComplex(
       Rect frame, ImageCanvas imageCanvas) async {
     final overlaps =
         imageCanvas.imagesets.where((imageset) => imageset.pos.overlaps(frame));
@@ -349,7 +349,7 @@ class GenerationExecuter {
     );
 
     // We scan a downscaled version - although we can't downscale too much or we'll miss stuff
-    final scanSize = frame.size ~/ 16;
+    final scanSize = frame.size ~/ 4;
 
     // Use medium quality to loose the least possible during downscale
     final paint = Paint();
@@ -418,27 +418,70 @@ class GenerationExecuter {
     ImageCanvas imageCanvas,
   ) async {
     final intersections = imageCanvas.imagesets
-        .map<Rect>((set) => set.pos.intersect(frame))
-        .where((rect) => rect.volume > 0);
+        .map<ImagesetIntersection>((set) => ImagesetIntersection(
+              set,
+              set.pos.intersect(frame),
+            ))
+        .where((intersect) => intersect.rect.volume > 0)
+        .toList();
 
     // No intersections, so it's easy, this is a create
     if (intersections.isEmpty) return ImageCanvasMode.create;
 
+    intersections.sort((a, b) => (a.hasMask ? 1 : 0) - (b.hasMask ? 1 : 0));
+
+    // Masks are a problem, so first try and come up with a result
+    // ignoring them. We can do that in a couple of situations:
+    //  - We get complete converage from images with no masks -> variant
+    //  - We get incomplete converage from all images ignoring masks -> fill
+
     // We want the contribution for each intersection, excluding
     // any intersections we've already counted
 
-    final coverages = <double>[];
+    double coverage = 0.0;
     final considered = <Rect>[];
+    bool hasSeenMask = false;
 
     for (final intersection in intersections) {
-      coverages.add(exclusiveIntersectionVolume(intersection, considered));
-      considered.add(intersection);
+      coverage += exclusiveIntersectionVolume(intersection.rect, considered);
+      hasSeenMask = hasSeenMask || intersection.hasMask;
+
+      if (!hasSeenMask && coverage >= frame.volume - 1) {
+        // We've got complete coverage without hitting a mask
+        return ImageCanvasMode.variants;
+      }
+
+      considered.add(intersection.rect);
     }
 
-    // debugPrint("${frame.volume} ${coverages}");
+    if (coverage < frame.volume - 1) {
+      // Even ignoring masks we didn't get complete coverage
+      return ImageCanvasMode.fill;
+    }
 
-    if (coverages.sum >= frame.volume) return ImageCanvasMode.variants;
-    return ImageCanvasMode.fill;
+    // Result depends on a mask, so we'll have to do it the slow way
+    return await testImageModeComplex(frame, imageCanvas);
+  }
+}
+
+class ImagesetIntersection {
+  final ImageCanvasImageSet imageset;
+  final Rect rect;
+
+  ImagesetIntersection(this.imageset, this.rect);
+
+  get hasMask {
+    final image = imageset.selectedImage();
+    if (image == null) return false;
+
+    for (final mask in image.maskstrokes) {
+      final extents = mask.extents();
+      if (extents == null) continue;
+
+      if (extents.shift(imageset.pos.topLeft).overlaps(rect)) return true;
+    }
+
+    return false;
   }
 }
 

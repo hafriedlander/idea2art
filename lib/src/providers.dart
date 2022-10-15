@@ -178,7 +178,7 @@ extension RefDebounceExtension on Ref {
   }
 }
 
-const imageCanvasFrameModeDebounce = Duration(milliseconds: 2);
+const imageCanvasFrameModeDebounce = Duration(milliseconds: 100);
 final imageCanvasFrameModeStopwatch = Stopwatch();
 
 final imageCanvasControlsWithModeProvider =
@@ -201,7 +201,9 @@ final imageCanvasControlsWithModeProvider =
       if (imageCanvasFrameModeStopwatch.elapsed >
           imageCanvasFrameModeDebounce * 0.5) {
         debugPrint(
-            "Warning - frame mode calculation took longer than half of debounce time, ${imageCanvasFrameModeStopwatch.elapsedMilliseconds}ms");
+          "Warning - frame mode calculation took longer than half of debounce"
+          " time, ${imageCanvasFrameModeStopwatch.elapsedMilliseconds}ms",
+        );
       }
 
       controls = controls.copyWith(mode: res);

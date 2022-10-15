@@ -30,16 +30,10 @@ class ImageCanvasImagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    debugPrint("${image.maskstrokes.length} ${w}");
-
     final scale = w / image.image.width.toDouble();
-
     canvas.saveLayer(null, Paint());
-
     canvas.scale(scale);
-
     image.drawToCanvas(canvas, extraMask: extraMask);
-
     canvas.restore();
   }
 
@@ -69,7 +63,7 @@ class ImageCanvasImageWidget extends HookConsumerWidget {
 
     return SizedBox(
       width: w.toDouble(),
-      height: w.toDouble(),
+      height: h.toDouble(),
       child: ClipRect(
         child: CustomPaint(
           painter: ImageCanvasImagePainter(

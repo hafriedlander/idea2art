@@ -24,6 +24,25 @@ class ImageCanvasMaskStroke {
       points: points ?? this.points,
     );
   }
+
+  Rect? extents() {
+    Rect? extents;
+
+    for (final point in points) {
+      final pointRect = Rect.fromPoints(
+        point - Offset(r, r),
+        point + Offset(r, r),
+      );
+
+      if (extents == null) {
+        extents = pointRect;
+      } else {
+        extents = extents.expandToInclude(pointRect);
+      }
+    }
+
+    return extents;
+  }
 }
 
 @immutable
