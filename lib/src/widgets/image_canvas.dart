@@ -344,11 +344,11 @@ class ImageCanvasFrameWidget extends ConsumerWidget {
   }
 }
 
-class ImageCanvaHitTests {
+class ImageCanvasHitTests {
   final Rect? frame;
   final Iterable<ImageCanvasImageSet> imagesets;
 
-  ImageCanvaHitTests(this.frame, this.imagesets);
+  ImageCanvasHitTests(this.frame, this.imagesets);
 
   bool frameHittest(Offset pos) {
     return frame?.contains(pos) ?? false;
@@ -537,7 +537,7 @@ class GenerationGestureHandler extends HookConsumerWidget {
         // If we tapped (without pan), treat it like a select / unselect
         final hitpos = gesturePointToCanvas(details.localPosition);
 
-        final tester = ImageCanvaHitTests(frame, images.imagesets);
+        final tester = ImageCanvasHitTests(frame, images.imagesets);
         final hitSet = tester.imagesetHittest(hitpos);
 
         if (hitSet == null) {
@@ -549,7 +549,7 @@ class GenerationGestureHandler extends HookConsumerWidget {
       onScaleStart: (details) {
         // Remember original position of everything we hit and might pan
         final hitpos = gesturePointToCanvas(details.localFocalPoint);
-        final tester = ImageCanvaHitTests(frame, images.imagesets);
+        final tester = ImageCanvasHitTests(frame, images.imagesets);
 
         panStart.value = hitpos;
         hitFrame.value = tester.frameHittest(hitpos) ? frame : null;
@@ -576,7 +576,7 @@ class GenerationGestureHandler extends HookConsumerWidget {
 
         if (hitFrameVal != null) {
           // Frame always has highest hit priority on pan
-          final tester = ImageCanvaHitTests(null, images.imagesets);
+          final tester = ImageCanvasHitTests(null, images.imagesets);
 
           var newPos = hitFrameVal.shift(delta);
           newPos = newPos.shift(tester.snapTest(newPos));
@@ -584,7 +584,7 @@ class GenerationGestureHandler extends HookConsumerWidget {
           ref.read(imageCanvasFrameProvider.notifier).setCenter(newPos.center);
         } else if (hitSetVal != null) {
           // Imageset has next highest hit priority
-          final tester = ImageCanvaHitTests(
+          final tester = ImageCanvasHitTests(
             frame,
             images.imagesets.where((set) => set.key != hitSetVal.key),
           );
