@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:idea2art/src/generated/generation.pb.dart';
 import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/notifiers/generate.dart';
 import 'package:idea2art/src/providers.dart';
 
 class LabelledSettingControl extends StatelessWidget {
-  LabelledSettingControl(
-      {required this.label,
-      required this.description,
-      this.subdescription,
-      this.value,
-      required this.child});
+  LabelledSettingControl({
+    required this.label,
+    required this.description,
+    this.subdescription,
+    this.value,
+    required this.child,
+    this.padding = 0,
+  });
 
   final String label;
   final String description;
   final String? subdescription;
   final String? value;
   final Widget child;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +40,17 @@ class LabelledSettingControl extends StatelessWidget {
           ],
         ),
         Text(description),
-        child,
-        Text(subdescription ?? ""),
+        Padding(
+          padding:
+              EdgeInsets.only(bottom: subdescription == null ? padding : 0),
+          child: child,
+        ),
+        subdescription != null
+            ? Padding(
+                padding: EdgeInsets.only(bottom: padding),
+                child: Text(subdescription!),
+              )
+            : Container(),
       ],
     );
   }
@@ -101,6 +114,7 @@ class EngineSelectorDropdown extends ConsumerWidget {
         child: DropdownButton<String>(
           value: engine.id,
           icon: const Icon(Icons.arrow_downward),
+          isExpanded: true,
           onChanged: (String? value) {
             if (value != null) {
               ref.read(generateSettingsProvider.notifier).setEngineID(value);
@@ -122,11 +136,53 @@ class EngineSelectorDropdown extends ConsumerWidget {
   }
 }
 
+class SamplerSelectorDropdown extends ConsumerWidget {
+  const SamplerSelectorDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final samplers = SamplerStrings;
+
+    final sampler = ref.watch(
+      generateSettingsProvider.select((settings) => settings.sampler),
+    );
+
+    return LabelledSettingControl(
+      label: "Sampler",
+      description:
+          "Different samplers can give different results with different aesthetics. Experiment and find your favourite.",
+      padding: 10,
+      child: DropdownButton<DiffusionSampler>(
+        value: sampler,
+        icon: const Icon(Icons.arrow_downward),
+        isExpanded: true,
+        onChanged: (DiffusionSampler? value) {
+          if (value != null) {
+            ref.read(generateSettingsProvider.notifier).setSampler(value);
+          }
+        },
+        items: samplers.entries
+            .map<DropdownMenuItem<DiffusionSampler>>(
+              (final entry) => DropdownMenuItem<DiffusionSampler>(
+                value: entry.key,
+                child: Text(entry.value),
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
 class GenerateSettingsControls extends ConsumerWidget {
   const GenerateSettingsControls({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sampler = ref.watch(
+      generateSettingsProvider.select((settings) => settings.sampler),
+    );
+
     return Container(
       padding: EdgeInsets.all(25),
       child: Column(
@@ -153,27 +209,6 @@ class GenerateSettingsControls extends ConsumerWidget {
                 notifier.setHeight(value.toInt()),
           ),
           GenerateSlider(
-            label: "CFG Scale",
-            description:
-                "CFG Scale adjusts how much the image will be like your prompt. Higher values keep your image closer to your prompt.",
-            min: 0,
-            max: 20,
-            divisions: ((20 - 0) / 0.5).ceil(),
-            selector: (GenerateSettings settings) => settings.cfgScale,
-            changeHandler: (notifier, value) => notifier.setCfgScale(value),
-          ),
-          GenerateSlider(
-            label: "Steps",
-            description:
-                "How many steps to spend generating your image. More steps typically means less noise, but too many can start introducing oddities.",
-            min: 5,
-            max: 150,
-            divisions: ((150 - 5) / 1).ceil(),
-            selector: (GenerateSettings settings) => settings.steps.toDouble(),
-            changeHandler: (notifier, value) =>
-                notifier.setSteps(value.toInt()),
-          ),
-          GenerateSlider(
             label: "Number of Images",
             description:
                 "Generate multiple images from a single prompt. If you provide a seed, it will be used for the first image, and incremented by 1 for each image after that.",
@@ -185,7 +220,46 @@ class GenerateSettingsControls extends ConsumerWidget {
             changeHandler: (notifier, value) =>
                 notifier.setNumberOfImages(value.toInt()),
           ),
-          EngineSelectorDropdown()
+          GenerateSlider(
+            label: "CFG Scale",
+            description:
+                "CFG Scale adjusts how much the image will be like your prompt. Higher values keep your image closer to your prompt.",
+            min: 0,
+            max: 20,
+            divisions: ((20 - 0) / 0.5).ceil(),
+            selector: (GenerateSettings settings) => settings.cfgScale,
+            changeHandler: (notifier, value) => notifier.setCfgScale(value),
+          ),
+          SamplerSelectorDropdown(),
+          ...(sampler == DiffusionSampler.SAMPLER_DDIM
+              ? [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: GenerateSlider(
+                      label: "ETA",
+                      description: "Increase noise introduced during sampling.",
+                      min: 0,
+                      max: 1,
+                      divisions: ((1 - 0) / 0.05).ceil(),
+                      selector: (GenerateSettings settings) => settings.eta,
+                      changeHandler: (notifier, value) =>
+                          notifier.setETA(value),
+                    ),
+                  ),
+                ]
+              : []),
+          GenerateSlider(
+            label: "Steps",
+            description:
+                "How many steps to spend generating your image. More steps typically means less noise, but too many can start introducing oddities.",
+            min: 5,
+            max: 150,
+            divisions: ((150 - 5) / 1).ceil(),
+            selector: (GenerateSettings settings) => settings.steps.toDouble(),
+            changeHandler: (notifier, value) =>
+                notifier.setSteps(value.toInt()),
+          ),
+          EngineSelectorDropdown(),
         ],
       ),
     );

@@ -460,6 +460,7 @@ class GenerationExecuter {
     }
 
     // Result depends on a mask, so we'll have to do it the slow way
+    debugPrint("Mode is complex");
     return await testImageModeComplex(frame, imageCanvas);
   }
 }
@@ -487,6 +488,6 @@ class ImagesetIntersection {
 
 extension VolumeExtension on Rect {
   double get volume {
-    return width * height;
+    return (width < 0 || height < 0) ? 0 : width * height;
   }
 }

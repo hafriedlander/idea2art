@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:async/async.dart';
-import 'package:image/image.dart' as di;
 import 'package:fixnum/fixnum.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -20,7 +19,6 @@ import 'package:idea2art/src/models/server.dart';
 import 'package:idea2art/src/generated/dashboard.pbgrpc.dart';
 import 'package:idea2art/src/generated/engines.pbgrpc.dart' as eg;
 import 'package:idea2art/src/generated/generation.pbgrpc.dart';
-import 'package:fixnum/fixnum.dart' as $fixnum;
 
 class GenerateServiceHostPortBadException implements Exception {
   String? message;
@@ -158,7 +156,6 @@ class GenerateService {
       if (err.code == 14) {
         throw GenerateServiceAuthorizationException(err.message);
       } else {
-        debugPrint("$err ${err.message}");
         throw GenerateServiceHostPortBadException(err.message);
       }
     }
@@ -223,32 +220,6 @@ class GenerateService {
 
     final crop = prompt.crop;
 
-    /*
-    final maskLevelAdjustment = {
-      MaskShift.noShift: <ImageAdjustment>[],
-      MaskShift.towardsExposed: <ImageAdjustment>[
-        ImageAdjustment(
-          levels: ImageAdjustment_Levels(
-            inputLow: 0.5,
-            inputHigh: 1,
-            outputLow: 0,
-            outputHigh: 1,
-          ),
-        ),
-      ],
-      MaskShift.towardsProtected: <ImageAdjustment>[
-        ImageAdjustment(
-          levels: ImageAdjustment_Levels(
-            inputLow: 0,
-            inputHigh: 0.5,
-            outputLow: 0,
-            outputHigh: 1,
-          ),
-        ),
-      ],
-    }[prompt.maskShift];
-  */
-
     final imagePng = prompt.imagePng;
     if (imagePng != null) {
       final imagePrompt = Prompt(
@@ -262,10 +233,10 @@ class GenerateService {
         imagePrompt.artifact.adjustments.add(
           ImageAdjustment(
             crop: ImageAdjustment_Crop(
-              top: $fixnum.Int64(crop.top.toInt()),
-              left: $fixnum.Int64(crop.left.toInt()),
-              height: $fixnum.Int64(crop.height.toInt()),
-              width: $fixnum.Int64(crop.width.toInt()),
+              top: Int64(crop.top.toInt()),
+              left: Int64(crop.left.toInt()),
+              height: Int64(crop.height.toInt()),
+              width: Int64(crop.width.toInt()),
             ),
           ),
         );
@@ -295,7 +266,6 @@ class GenerateService {
                         : GaussianDirection.DIRECTION_DOWN,
               ),
             ),
-            //...maskLevelAdjustment!
           ],
         ),
       );
@@ -304,10 +274,10 @@ class GenerateService {
         maskPrompt.artifact.adjustments.add(
           ImageAdjustment(
             crop: ImageAdjustment_Crop(
-              top: $fixnum.Int64(crop.top.toInt()),
-              left: $fixnum.Int64(crop.left.toInt()),
-              height: $fixnum.Int64(crop.height.toInt()),
-              width: $fixnum.Int64(crop.width.toInt()),
+              top: Int64(crop.top.toInt()),
+              left: Int64(crop.left.toInt()),
+              height: Int64(crop.height.toInt()),
+              width: Int64(crop.width.toInt()),
             ),
           ),
         );
@@ -325,15 +295,12 @@ class GenerateService {
         samples: Int64(settings.numberOfImages),
         steps: Int64(settings.steps),
         seed: settings.seed >= 0 ? [settings.seed] : [],
-        transform: TransformType(
-          // TODO: Don't hardcode
-          diffusion: DiffusionSampler.SAMPLER_K_EULER_ANCESTRAL,
-        ),
+        transform: TransformType(diffusion: settings.sampler),
         parameters: [
           StepParameter(
             sampler: SamplerParameters(
               cfgScale: settings.cfgScale,
-              eta: 0.8, // TODO: Don't hardcode ETA
+              eta: settings.eta,
             ),
             schedule: ScheduleParameters(start: settings.strength),
           ),

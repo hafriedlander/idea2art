@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:idea2art/src/generated/generation.pb.dart';
 import 'package:idea2art/src/models/engine.dart';
 import 'package:idea2art/src/models/generate.dart';
 import 'package:idea2art/src/providers.dart';
@@ -16,6 +17,7 @@ class GenerateSettingsNotifier extends StateNotifier<GenerateSettings> {
 
   final Ref ref;
 
+  /*
   void loadEngineID() {
     final value = ref.read(enginesProvider).value;
     final current = state.engineID;
@@ -28,6 +30,7 @@ class GenerateSettingsNotifier extends StateNotifier<GenerateSettings> {
         state = state.copyWith(engineID: engineIDs.first);
     }
   }
+  */
 
   void setWidth(int width) {
     state = state.copyWith(width: width);
@@ -49,8 +52,12 @@ class GenerateSettingsNotifier extends StateNotifier<GenerateSettings> {
     state = state.copyWith(numberOfImages: numberOfImages);
   }
 
-  void setSampler(String sampler) {
+  void setSampler(DiffusionSampler sampler) {
     state = state.copyWith(sampler: sampler);
+  }
+
+  void setETA(double eta) {
+    state = state.copyWith(eta: eta);
   }
 
   void setEngineID(String engineID) {
