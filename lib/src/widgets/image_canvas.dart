@@ -744,11 +744,9 @@ class ImageCanvasWidget extends HookConsumerWidget {
             behavior: HitTestBehavior.translucent,
             onPointerSignal: (event) {
               if (event is PointerScrollEvent) {
-                if (event.scrollDelta.dy < 0) {
-                  canvasScale.value = canvasScale.value * 1.2;
-                } else if (event.scrollDelta.dy > 0) {
-                  canvasScale.value = canvasScale.value / 1.2;
-                }
+                canvasScale.value = max(
+                    0.1, min(2.0, canvasScale.value - event.scrollDelta.dy * 0.001)
+                );
               }
             },
             // This GestureDetector is used for panning, scaling and mask / paint modes
