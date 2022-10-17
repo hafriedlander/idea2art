@@ -60,7 +60,8 @@ final generateServerProvider = StateNotifierProvider<
 final generateServiceProvider = FutureProvider<GenerateService>((ref) async {
   final server = ref.watch(generateServerProvider);
 
-  final serverValue = server.value;
+  final serverValue = server.valueOrNull;
+
   if (serverValue != null) {
     final service = GenerateService(serverValue);
     await service.test();
@@ -74,7 +75,8 @@ final generateServiceBusyProvider =
     StateNotifierProvider<BusyNotifier, bool>((ref) {
   final service = ref.watch(generateServiceProvider);
 
-  final serviceValue = service.value;
+  final serviceValue = service.valueOrNull;
+
   if (serviceValue != null) {
     return serviceValue.busy;
   }
@@ -181,21 +183,32 @@ extension RefDebounceExtension on Ref {
 const imageCanvasFrameModeDebounce = Duration(milliseconds: 100);
 final imageCanvasFrameModeStopwatch = Stopwatch();
 
-final imageCanvasControlsWithModeProvider =
-    FutureProvider<ImageCanvasControls>((ref) async {
-  var controls = ref.watch(imageCanvasControlsProvider);
-  final frame = ref.watch(imageCanvasFrameWithSizeProvider);
-  final imageCanvas = ref.watch(imageCanvasProvider);
+class ImageCanvasControlsWithModeNotifier
+    extends StateNotifier<AsyncValue<ImageCanvasControls>> {
+  final StateNotifierProviderRef ref;
+  final Rect pos;
+  final ImageCanvas imageCanvas;
 
-  if (controls.mode == ImageCanvasMode.auto) {
-    // This is potentially a fairly expensive operation, so debounce a little
-    await ref.debounce(imageCanvasFrameModeDebounce);
+  ImageCanvasControlsWithModeNotifier(
+    this.ref,
+    ImageCanvasControls controls,
+    this.pos,
+    this.imageCanvas,
+  ) : super(AsyncData(controls)) {
+    if (controls.mode == ImageCanvasMode.auto) _calculateMode();
+  }
 
+  Future<void> _calculateMode() async {
     try {
+      await ref.debounce(imageCanvasFrameModeDebounce);
+    } catch (err) {
+      return;
+    }
+
+    state = await AsyncValue.guard(() async {
       imageCanvasFrameModeStopwatch.reset();
       imageCanvasFrameModeStopwatch.start();
-      final res =
-          await GenerationExecuter.testImageMode(frame.pos, imageCanvas);
+      final res = await GenerationExecuter.testImageMode(pos, imageCanvas);
       imageCanvasFrameModeStopwatch.stop();
 
       if (imageCanvasFrameModeStopwatch.elapsed >
@@ -206,11 +219,22 @@ final imageCanvasControlsWithModeProvider =
         );
       }
 
-      controls = controls.copyWith(mode: res);
-    } catch (e) {
-      debugPrint("Ouch, ${e}");
-    }
+      return ref.read(imageCanvasControlsProvider).copyWith(mode: res);
+    });
   }
+}
 
-  return controls;
+final imageCanvasControlsWithModeProvider = StateNotifierProvider<
+    StateNotifier<AsyncValue<ImageCanvasControls>>,
+    AsyncValue<ImageCanvasControls>>((ref) {
+  final controls = ref.watch(imageCanvasControlsProvider);
+  final frame = ref.watch(imageCanvasFrameWithSizeProvider);
+  final imageCanvas = ref.watch(imageCanvasProvider);
+
+  return ImageCanvasControlsWithModeNotifier(
+    ref,
+    controls,
+    frame.pos,
+    imageCanvas,
+  );
 });

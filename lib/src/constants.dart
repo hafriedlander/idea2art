@@ -17,4 +17,5 @@ class Idea2artIcons {
   static const generate_more = Icons.auto_awesome_motion;
   static const delete = Icons.delete_forever;
   static const cancel = Icons.cancel;
+  static const command_menu = Icons.menu;
 }

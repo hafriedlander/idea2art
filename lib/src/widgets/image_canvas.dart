@@ -406,15 +406,25 @@ class ImageCanvaHitTests {
   }
 }
 
-class ImageCanvasToolWidget extends HookConsumerWidget {
-  const ImageCanvasToolWidget({super.key});
+class ImageCanvasToolButton extends StatelessWidget {
+  final IconData icon;
+  final Function() callback;
+  final bool selected;
 
-  Widget buildButton(callback, IconData icon, {selected = false}) {
+  const ImageCanvasToolButton({
+    super.key,
+    required this.icon,
+    required this.callback,
+    this.selected = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final bg = selected ? Colors.lightGreen : Colors.white;
     final color = selected ? Colors.white : Colors.black;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
       child: Container(
         width: 48,
         height: 48,
@@ -436,6 +446,30 @@ class ImageCanvasToolWidget extends HookConsumerWidget {
       ),
     );
   }
+}
+
+class ImageCanvasCommandsWidget extends HookConsumerWidget {
+  const ImageCanvasCommandsWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final expanded = useState<bool>(false);
+
+    if (expanded.value) {
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.center, children: []);
+    } else {
+      return ImageCanvasToolButton(
+        callback: () => expanded.value = true,
+        icon: Idea2artIcons.command_menu,
+        selected: true,
+      );
+    }
+  }
+}
+
+class ImageCanvasToolWidget extends HookConsumerWidget {
+  const ImageCanvasToolWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -457,12 +491,12 @@ class ImageCanvasToolWidget extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: ImageCanvasMode.values
             .map<Widget>(
-              (val) => buildButton(
-                () {
+              (val) => ImageCanvasToolButton(
+                callback: () {
                   expanded.value = false;
                   ref.read(imageCanvasControlsProvider.notifier).setMode(val);
                 },
-                icons[val]!,
+                icon: icons[val]!,
                 selected: false,
               ),
             )
@@ -482,14 +516,17 @@ class ImageCanvasToolWidget extends HookConsumerWidget {
                   .setMaskRadius(val),
             ),
           ),
-          buildButton(() => expanded.value = true, Idea2artIcons.mask,
-              selected: true)
+          ImageCanvasToolButton(
+            callback: () => expanded.value = true,
+            icon: Idea2artIcons.mask,
+            selected: true,
+          )
         ],
       );
     } else {
-      return buildButton(
-        () => expanded.value = true,
-        icons[controls.mode]!,
+      return ImageCanvasToolButton(
+        callback: () => expanded.value = true,
+        icon: icons[controls.mode]!,
         selected: true,
       );
     }
@@ -766,9 +803,14 @@ class ImageCanvasWidget extends HookConsumerWidget {
                     imageset: selectedImageset,
                   ),
                 )
-              : Container(),
+              : Container(height: 0, width: 0),
           const Positioned(
-            bottom: 10,
+            top: 10,
+            left: 10,
+            child: ImageCanvasCommandsWidget(),
+          ),
+          const Positioned(
+            top: 10,
             right: 10,
             child: ImageCanvasToolWidget(),
           ),

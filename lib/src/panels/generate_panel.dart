@@ -87,13 +87,10 @@ class GeneratePrimaryPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasResult = ref.watch(
-        resultImagesProvider.select((result) => result.images.isNotEmpty));
-
     final controls = ref.watch(imageCanvasControlsProvider);
 
     return Column(children: [
-      Expanded(
+      const Expanded(
         child: Center(child: ImageCanvasWidget()),
       ),
       SizedBox(
@@ -102,7 +99,10 @@ class GeneratePrimaryPanel extends ConsumerWidget {
             children: controls.isGenerationMode()
                 ? [
                     Expanded(child: GeneratePromptField()),
-                    GenerateButton(),
+                    const SizedBox(
+                      width: 100,
+                      child: GenerateButton(),
+                    ),
                   ]
                 : []),
       ),
@@ -118,21 +118,24 @@ class GenerateButton extends ConsumerWidget {
     final controls = ref.watch(imageCanvasControlsWithModeProvider);
     final available = ref.watch(generateServiceAvailableProvider);
 
+    final mode = controls.valueOrNull?.mode ?? ImageCanvasMode.auto;
+
     final label = {
+      ImageCanvasMode.auto: '...',
       ImageCanvasMode.create: 'CREATE',
       ImageCanvasMode.variants: 'VARIANTS',
       ImageCanvasMode.fill: 'FILL',
-    }[controls.valueOrNull?.mode ?? ImageCanvasMode.create];
+    }[mode];
 
-    if (label == null) return Container();
+    final enable = available && mode != ImageCanvasMode.auto;
 
     return ElevatedButton(
-      onPressed: available
+      onPressed: enable
           ? () {
               GenerationExecuter.generateForNewImageset(ref);
             }
           : null,
-      child: Text(label),
+      child: Text(label ?? ""),
     );
   }
 }

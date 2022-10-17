@@ -67,7 +67,7 @@ class GenerateSettings {
     this.height = 512,
     this.cfgScale = 7,
     this.steps = 50,
-    this.numberOfImages = 1,
+    this.numberOfImages = 4,
     this.sampler = DiffusionSampler.SAMPLER_DDIM,
     this.eta = 0.8,
     this.engineID = "",
